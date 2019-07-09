@@ -13,7 +13,6 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th scope="col">ID</th>
 				<th scope="col">Book</th>
 				<th scope="col">Instrument</th>
 				<th scope="col">Price</th>
@@ -22,7 +21,6 @@
 		</thead>
 		<tbody>
 			<tr th:each="position: ${positions}" scope="row">
-				<td th:text="${position.id}" />
 				<td th:text="${position.book}" />
 				<td th:text="${position.instrument}" />
 				<td th:text="${position.price}" />

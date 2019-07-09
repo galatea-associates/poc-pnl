@@ -15,9 +15,6 @@ public class PnLController {
 
 	@GetMapping("/positions")
 	public String getAllPositions(Model model) {
-
-		positionRepository.save(Position.builder().book("ABC").instrument("US123").price(10.0).qty(6).build());
-
 		Iterable<Position> positions = positionRepository.findAll();
 
 		model.addAttribute("positions", positions);
