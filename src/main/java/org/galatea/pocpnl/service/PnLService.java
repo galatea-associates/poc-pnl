@@ -50,7 +50,7 @@ public class PnLService {
 
 				ValuationResponse valuationResponse = valuationService.value(valuationInput);
 				if (valuationResponse.isMoreDataNeeded()) {
-					log.info("More data needed for valuating position: {}, {}", position, valuationResponse.getMissingInput());
+					log.info("More data needed for valuating position: {}, {}", position, valuationResponse);
 					// get more data and revalue..
 					valuationInput = augmentValuationInput(valuationResponse, position);
 					
