@@ -1,5 +1,6 @@
 package org.galatea.pocpnl.service;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,8 +23,12 @@ public class PnLService {
     this.valuationService = valuationService;
   }
 
-  public void start() {
-    log.info("Calculating PnL");
+  public void calculateEODPnL(LocalDate eodDate) {
+    log.info("Calculating EOD P&L for: {}", eodDate);
+
+    // get date for reference valuations for P&L calculations
+    LocalDate referenceDate = getReferenceDate(eodDate);
+    log.info("Retrieved reference date for P&L calculations: {}", referenceDate);
 
     // Get books
     Set<String> books = getBooks();
@@ -62,6 +67,10 @@ public class PnLService {
 
   private Set<String> getBooks() {
     return Stream.of("book1").collect(Collectors.toSet());
+  }
+
+  private LocalDate getReferenceDate(LocalDate eodDate) {
+    return eodDate.minusDays(1);
   }
 
 }
