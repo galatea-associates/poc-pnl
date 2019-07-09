@@ -105,7 +105,9 @@ public class PnLService {
       switch (input) {
         case PRICE:
           // TODO: lookup price for this instrument
-          inputData.addInput(input, 201.40);
+          // for now, move the price somewhere within +/- 10% of the cost basis for the position
+          double spotPrice = (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
+          inputData.addInput(input, spotPrice);
           break;
         case QTY:
           inputData.addInput(input, position.getQty());
