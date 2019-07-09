@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PnLService {
 
+	private static final String CURRENCY = "currency";
+	private static final String QTY = "qty";
+	private static final String PRICE = "price";
+	
 	@NonNull
 	private final IValuationService valuationService;
 
@@ -41,13 +45,17 @@ public class PnLService {
 			Set<Position> positions = getPositionsForBook(book);
 
 			for (Position position : positions) {
-				log.info("Valuing position: {}", position);
-				ValuationInput valuationInput = null;
+				log.info("Valuating position: {}", position);
+				ValuationInput valuationInput = new ValuationInput();
 
 				ValuationResponse valuationResponse = valuationService.value(valuationInput);
 				if (valuationResponse.isMoreDataNeeded()) {
+					log.info("More data needed for valuating position: {}, {}", position, valuationResponse.getMissingInput());
 					// get more data and revalue..
-					valuationInput = augmentValuationInput(valuationResponse);
+					valuationInput = augmentValuationInput(valuationResponse, position);
+					
+					// What should we do if we can't find inputs required for valuation?
+					
 					valuationResponse = valuationService.value(valuationInput);
 				}
 
@@ -88,7 +96,29 @@ public class PnLService {
 		return new ValuationReferenceKey(referenceDate);
 	}
 
-	private ValuationInput augmentValuationInput(ValuationResponse valuationResponse) {
+	private ValuationInput augmentValuationInput(ValuationResponse valuationResponse, Position position) {
+		ValuationInput inputData = valuationResponse.getValuationInput();
+		Set<String> missingInput = valuationResponse.getMissingInput();
+		
+		for (String input: missingInput) {
+			log.info("Including position {} to ValuationInput data", input);
+			switch (input) {
+			case PRICE:
+				inputData.addInput(input, 40.0);
+				break;
+			case QTY:
+				inputData.addInput(input, 10);
+				break;
+			case CURRENCY:
+				inputData.addInput(input, "USD");
+				break;
+			default:
+				// TODO: handle this error. 
+				log.error("Don't know how to get {} from position", input);
+				break;
+			}
+		}
+	
 		return valuationResponse.getValuationInput();
 	}
 

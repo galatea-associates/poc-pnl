@@ -7,7 +7,7 @@ public class FixedValuationService implements IValuationService {
 
   @Override
   public ValuationResponse value(ValuationInput input) {
-    return new ValuationResponse(new ValuationResult(43.0, "USD"), input);
+	  return ValuationResponse.builder().valuationResult(new ValuationResult(43.0, "USD")).valuationInput(input).build();
   }
 
 }
