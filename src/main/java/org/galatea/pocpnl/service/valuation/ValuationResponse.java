@@ -5,7 +5,7 @@ import lombok.Value;
 @Value
 public class ValuationResponse {
 
-  private double valuation;
+  private ValuationResult valuationResult;
   private ValuationInput valuationInput;
 
   public boolean isMoreDataNeeded() {
