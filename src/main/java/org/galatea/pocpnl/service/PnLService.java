@@ -1,18 +1,18 @@
 package org.galatea.pocpnl.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.galatea.pocpnl.domain.Position;
+import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.service.valuation.IValuationService;
 import org.galatea.pocpnl.service.valuation.PnLResult;
 import org.galatea.pocpnl.service.valuation.ValuationInput;
 import org.galatea.pocpnl.service.valuation.ValuationKey;
 import org.galatea.pocpnl.service.valuation.ValuationResponse;
 import org.galatea.pocpnl.service.valuation.ValuationResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -23,12 +23,11 @@ public class PnLService {
   private static final String PRICE = "Instrument.Price";
   private static final String CURRENCY = "Instrument.Currency";
 
-  @NonNull
-  private final IValuationService valuationService;
+  @Autowired
+  private IValuationService valuationService;
 
-  public PnLService(IValuationService valuationService) {
-    this.valuationService = valuationService;
-  }
+  @Autowired
+  private PositionRepository positionRepository;
 
   public void calculateEODPnL(LocalDate eodDate) {
     log.info("Calculating EOD P&L for: {}", eodDate);
@@ -42,7 +41,7 @@ public class PnLService {
 
     for (String book : books) {
       log.info("Calculating P&L for book: {}", book);
-      Set<Position> positions = getPositionsForBook(book);
+      List<Position> positions = getPositionsForBook(book);
 
       for (Position position : positions) {
         log.info("Valuating position: {}", position);
@@ -81,13 +80,14 @@ public class PnLService {
 
   private PnLResult calculatePnl(ValuationResult currentValuation, ValuationResult referenceValuation, ValuationKey valuationReferenceKey) {
     double pnl = currentValuation.getValuation() - referenceValuation.getValuation();
+    log.info("Calculated P&L {} from {}, {}", pnl, currentValuation, referenceValuation);
     return new PnLResult(pnl, currentValuation, valuationReferenceKey);
   }
 
   private ValuationResult getReferenceValuation(ValuationKey valuationReferenceKey) {
     // Fetch reference valuation
     log.info("Fetching reference valuation for {}", valuationReferenceKey);
-    ValuationResult result = new ValuationResult(2091, "USD");
+    ValuationResult result = new ValuationResult(20910, "USD");
     log.info("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
     return result;
   }
@@ -101,7 +101,7 @@ public class PnLService {
     Set<String> missingInput = valuationResponse.getMissingInput();
 
     for (String input : missingInput) {
-      log.info("Including position {} to ValuationInput data {}", input, inputData);
+      log.debug("Including position {} to ValuationInput data {}", input, inputData);
       switch (input) {
         case PRICE:
           // TODO: lookup price for this instrument
@@ -119,18 +119,23 @@ public class PnLService {
           log.error("Don't know how to get {} from position", input);
           break;
       }
-      log.info("Included position {} to ValuationInput data {}", input, inputData);
+      log.debug("Included position {} to ValuationInput data {}", input, inputData);
     }
 
-    return valuationResponse.getValuationInput();
+    log.info("Augmented ValuationInput: {}", inputData);
+    return inputData;
   }
 
-  private Set<Position> getPositionsForBook(String book) {
-    return Stream.of(new Position("book1", "TSLA", 208.31, 10)).collect(Collectors.toSet());
+  private List<Position> getPositionsForBook(String book) {
+    List<Position> positions = positionRepository.findByBook(book);
+    log.info("Found {} positions for book {}: {}", positions.size(), book, positions);
+    return positions;
   }
 
   private Set<String> getBooks() {
-    return Stream.of("book1").collect(Collectors.toSet());
+    Set<String> books = positionRepository.findDistinctBook();
+    log.info("Found books: {}", books);
+    return books;
   }
 
   private LocalDate getReferenceDate(LocalDate eodDate) {

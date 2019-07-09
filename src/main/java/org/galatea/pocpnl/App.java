@@ -14,10 +14,15 @@ public class App {
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
 
+    // load some Positions
+    PositionRepository positionRepository = context.getBean(PositionRepository.class);
+    positionRepository.save(new Position("EQTY1", "DNKN", 100, 79.22));
+    positionRepository.save(new Position("EQTY1", "TSLA", 1000, 237.78));
+
+    // load some old PnL records
+
     context.getBean(PnLService.class).calculateEODPnL(LocalDate.now());
 
-    PositionRepository positionRepository = context.getBean(PositionRepository.class);
-    positionRepository.save(new Position("book1", "inst1", 40.0, 6));
   }
 
 }
