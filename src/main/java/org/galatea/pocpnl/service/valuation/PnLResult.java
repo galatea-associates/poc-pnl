@@ -1,10 +1,10 @@
 package org.galatea.pocpnl.service.valuation;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class PnLResult {
-	private final double pnl;
-	private final ValuationResult currentValuation;
-	private final ValuationReferenceKey valuationReferenceKey;
+  double pnl;
+  ValuationResult currentValuation;
+  ValuationKey valuationReferenceKey;
 }

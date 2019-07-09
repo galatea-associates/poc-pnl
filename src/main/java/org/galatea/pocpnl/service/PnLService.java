@@ -10,7 +10,7 @@ import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.service.valuation.IValuationService;
 import org.galatea.pocpnl.service.valuation.PnLResult;
 import org.galatea.pocpnl.service.valuation.ValuationInput;
-import org.galatea.pocpnl.service.valuation.ValuationReferenceKey;
+import org.galatea.pocpnl.service.valuation.ValuationKey;
 import org.galatea.pocpnl.service.valuation.ValuationResponse;
 import org.galatea.pocpnl.service.valuation.ValuationResult;
 import org.springframework.stereotype.Service;
@@ -19,119 +19,122 @@ import org.springframework.stereotype.Service;
 @Service
 public class PnLService {
 
-	private static final String CURRENCY = "currency";
-	private static final String QTY = "qty";
-	private static final String PRICE = "price";
-	
-	@NonNull
-	private final IValuationService valuationService;
+  private static final String QTY = "Position.Quantity";
+  private static final String PRICE = "Instrument.Price";
+  private static final String CURRENCY = "Instrument.Currency";
 
-	public PnLService(IValuationService valuationService) {
-		this.valuationService = valuationService;
-	}
+  @NonNull
+  private final IValuationService valuationService;
 
-	public void calculateEODPnL(LocalDate eodDate) {
-		log.info("Calculating EOD P&L for: {}", eodDate);
+  public PnLService(IValuationService valuationService) {
+    this.valuationService = valuationService;
+  }
 
-		// get date for reference valuations for P&L calculations
-		LocalDate referenceDate = getReferenceDate(eodDate);
-		log.info("Retrieved reference date for P&L calculations: {}", referenceDate);
+  public void calculateEODPnL(LocalDate eodDate) {
+    log.info("Calculating EOD P&L for: {}", eodDate);
 
-		// Get books
-		Set<String> books = getBooks();
+    // get date for reference valuations for P&L calculations
+    LocalDate referenceDate = getReferenceDate(eodDate);
+    log.info("Retrieved reference date for P&L calculations: {}", referenceDate);
 
-		for (String book : books) {
-			log.info("Calculating P&L for book: {}", book);
-			Set<Position> positions = getPositionsForBook(book);
+    // Get books
+    Set<String> books = getBooks();
 
-			for (Position position : positions) {
-				log.info("Valuating position: {}", position);
-				ValuationInput valuationInput = new ValuationInput();
+    for (String book : books) {
+      log.info("Calculating P&L for book: {}", book);
+      Set<Position> positions = getPositionsForBook(book);
 
-				ValuationResponse valuationResponse = valuationService.value(valuationInput);
-				if (valuationResponse.isMoreDataNeeded()) {
-					log.info("More data needed for valuating position: {}, {}", position, valuationResponse);
-					// get more data and revalue..
-					valuationInput = augmentValuationInput(valuationResponse, position);
-					
-					// What should we do if we can't find inputs required for valuation?
-					
-					valuationResponse = valuationService.value(valuationInput);
-				}
+      for (Position position : positions) {
+        log.info("Valuating position: {}", position);
+        ValuationInput valuationInput = new ValuationInput();
 
-				log.info("Valuation for position {}: {}", position, valuationResponse);
+        ValuationResponse valuationResponse = valuationService.value(valuationInput);
+        if (valuationResponse.isMoreDataNeeded()) {
+          log.info("More data needed for valuating position: {}, {}", position, valuationResponse);
+          // get more data and revalue..
+          valuationInput = augmentValuationInput(valuationResponse, position);
 
-				// now need to get reference valuation to calculate P&L
-				ValuationReferenceKey valuationReferenceKey = getValuationReference(position, referenceDate);
-				
-				ValuationResult referenceValuation = getReferenceValuation(valuationReferenceKey);
-				ValuationResult currentValuation = valuationResponse.getValuationResult();
+          // What should we do if we can't find inputs required for valuation?
+          valuationResponse = valuationService.value(valuationInput);
+        }
 
-				PnLResult pnlResult = calculatePnl(currentValuation, referenceValuation, valuationReferenceKey);
-				log.info("P&L result: {}", pnlResult);
-				persistPnL(pnlResult);
-			}
-		}
+        log.info("Valuation for position {}: {}", position, valuationResponse);
 
-		log.info("PnL Calculation completed");
-	}
+        // now need to get reference valuation to calculate P&L
+        ValuationKey referenceValuationKey = getReferenceValuationKey(position, referenceDate);
 
-	private void persistPnL(PnLResult pnlResult) {
-		log.info("Persisting P&L: {}", pnlResult);
-	}
+        ValuationResult referenceValuation = getReferenceValuation(referenceValuationKey);
+        ValuationResult currentValuation = valuationResponse.getValuationResult();
 
-	private PnLResult calculatePnl(ValuationResult currentValuation, ValuationResult referenceValuation, ValuationReferenceKey valuationReferenceKey) {
-		double pnl = currentValuation.getValuation() - referenceValuation.getValuation();
-		return new PnLResult(pnl, currentValuation, valuationReferenceKey);
-	}
+        PnLResult pnlResult = calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
+        log.info("P&L result: {}", pnlResult);
+        persistPnL(pnlResult);
+      }
+    }
 
-	private ValuationResult getReferenceValuation(ValuationReferenceKey valuationReferenceKey) {
+    log.info("PnL Calculation completed");
+  }
 
-		// Fetch reference valuation
-		log.info("Fetching reference valuation for {}", valuationReferenceKey);
-		return new ValuationResult(40.0, "USD");
-	}
+  private void persistPnL(PnLResult pnlResult) {
+    log.info("Persisting P&L: {}", pnlResult);
+  }
 
-	private ValuationReferenceKey getValuationReference(Position position, LocalDate referenceDate) {
-		return new ValuationReferenceKey(referenceDate);
-	}
+  private PnLResult calculatePnl(ValuationResult currentValuation, ValuationResult referenceValuation, ValuationKey valuationReferenceKey) {
+    double pnl = currentValuation.getValuation() - referenceValuation.getValuation();
+    return new PnLResult(pnl, currentValuation, valuationReferenceKey);
+  }
 
-	private ValuationInput augmentValuationInput(ValuationResponse valuationResponse, Position position) {
-		ValuationInput inputData = valuationResponse.getValuationInput();
-		Set<String> missingInput = valuationResponse.getMissingInput();
-		
-		for (String input: missingInput) {
-			log.info("Including position {} to ValuationInput data", input);
-			switch (input) {
-			case PRICE:
-				inputData.addInput(input, 40.0);
-				break;
-			case QTY:
-				inputData.addInput(input, 10);
-				break;
-			case CURRENCY:
-				inputData.addInput(input, "USD");
-				break;
-			default:
-				// TODO: handle this error. 
-				log.error("Don't know how to get {} from position", input);
-				break;
-			}
-		}
-	
-		return valuationResponse.getValuationInput();
-	}
+  private ValuationResult getReferenceValuation(ValuationKey valuationReferenceKey) {
+    // Fetch reference valuation
+    log.info("Fetching reference valuation for {}", valuationReferenceKey);
+    ValuationResult result = new ValuationResult(2091, "USD");
+    log.info("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
+    return result;
+  }
 
-	private Set<Position> getPositionsForBook(String book) {
-		return Stream.of(new Position()).collect(Collectors.toSet());
-	}
+  private ValuationKey getReferenceValuationKey(Position position, LocalDate referenceDate) {
+    return new ValuationKey(position.getInstrument(), position.getBook(), referenceDate);
+  }
 
-	private Set<String> getBooks() {
-		return Stream.of("book1").collect(Collectors.toSet());
-	}
+  private ValuationInput augmentValuationInput(ValuationResponse valuationResponse, Position position) {
+    ValuationInput inputData = valuationResponse.getValuationInput();
+    Set<String> missingInput = valuationResponse.getMissingInput();
 
-	private LocalDate getReferenceDate(LocalDate eodDate) {
-		return eodDate.minusDays(1);
-	}
+    for (String input : missingInput) {
+      log.info("Including position {} to ValuationInput data {}", input, inputData);
+      switch (input) {
+        case PRICE:
+          // TODO: lookup price for this instrument
+          inputData.addInput(input, 201.40);
+          break;
+        case QTY:
+          inputData.addInput(input, position.getQty());
+          break;
+        case CURRENCY:
+          // TODO: lookup currency for this instrument
+          inputData.addInput(input, "USD");
+          break;
+        default:
+          // TODO: handle this error.
+          log.error("Don't know how to get {} from position", input);
+          break;
+      }
+      log.info("Included position {} to ValuationInput data {}", input, inputData);
+    }
+
+    return valuationResponse.getValuationInput();
+  }
+
+  private Set<Position> getPositionsForBook(String book) {
+    return Stream.of(new Position("book1", "TSLA", 208.31, 10)).collect(Collectors.toSet());
+  }
+
+  private Set<String> getBooks() {
+    return Stream.of("book1").collect(Collectors.toSet());
+  }
+
+  private LocalDate getReferenceDate(LocalDate eodDate) {
+    return eodDate.minusDays(1);
+  }
 
 }

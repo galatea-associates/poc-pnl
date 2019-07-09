@@ -1,10 +1,10 @@
 package org.galatea.pocpnl.service.valuation;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class ValuationResult {
-	private final double valuation;
-	private final String currency;
+  private final double valuation;
+  private final String currency;
 
 }

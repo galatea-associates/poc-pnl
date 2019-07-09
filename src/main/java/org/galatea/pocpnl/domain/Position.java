@@ -25,7 +25,7 @@ public class Position {
 	@NotNull
 	private String instrument;
 
-	private double price;
+	private double costBasis;
 
 	private int qty;
 
