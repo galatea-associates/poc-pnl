@@ -27,21 +27,20 @@ public class PnLService {
 
     // Get books
     Set<String> books = getBooks();
-    // For each book
+
     for (String book : books) {
       log.info("Calculating P&L for book: {}", book);
-      // .. get positions
       Set<Position> positions = getPositionsForBook(book);
 
-      // .. for each position
       for (Position position : positions) {
         log.info("Valuing position: {}", position);
-        // .. .. value
-        // Placeholder for the input
         ValuationInput valuationInput = null;
 
-        ValuationResponse valuation = valuationService.valuate(valuationInput);
+        // TODO: recursive discovery of what fields are needed for valuation
+        ValuationResponse valuation = valuationService.value(valuationInput);
         log.info("Valuation for position {}: {}", position, valuation);
+
+        // now need to get reference valuation to calculate P&L
       }
     }
 
