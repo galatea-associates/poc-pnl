@@ -36,15 +36,24 @@ public class PnLService {
         log.info("Valuing position: {}", position);
         ValuationInput valuationInput = null;
 
-        // TODO: recursive discovery of what fields are needed for valuation
-        ValuationResponse valuation = valuationService.value(valuationInput);
-        log.info("Valuation for position {}: {}", position, valuation);
+        ValuationResponse valuationResponse = valuationService.value(valuationInput);
+        if (valuationResponse.isMoreDataNeeded()) {
+          // get more data and revalue..
+          valuationInput = augmentValuationInput(valuationResponse);
+          valuationResponse = valuationService.value(valuationInput);
+        }
+
+        log.info("Valuation for position {}: {}", position, valuationResponse);
 
         // now need to get reference valuation to calculate P&L
       }
     }
 
     log.info("PnL Calculation completed");
+  }
+
+  private ValuationInput augmentValuationInput(ValuationResponse valuationResponse) {
+    return valuationResponse.getValuationInput();
   }
 
   private Set<Position> getPositionsForBook(String book) {

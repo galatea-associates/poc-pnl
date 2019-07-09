@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class FixedValuationService implements IValuationService {
 
-	@Override
-	public ValuationResponse value(Object input) {
-		return new ValuationResponse(43.0);
-	}
+  @Override
+  public ValuationResponse value(ValuationInput input) {
+    return new ValuationResponse(43.0, input);
+  }
 
 }

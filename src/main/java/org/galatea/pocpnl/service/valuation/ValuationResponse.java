@@ -1,10 +1,16 @@
 package org.galatea.pocpnl.service.valuation;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class ValuationResponse {
-	
-	private final double valuation;
+
+  private double valuation;
+  private ValuationInput valuationInput;
+
+  public boolean isMoreDataNeeded() {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
 }
