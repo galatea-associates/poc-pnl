@@ -123,7 +123,7 @@ public class PnLService {
 	}
 
 	private Set<Position> getPositionsForBook(String book) {
-		return Stream.of(new Position()).collect(Collectors.toSet());
+		return Stream.of(Position.builder().build()).collect(Collectors.toSet());
 	}
 
 	private Set<String> getBooks() {
