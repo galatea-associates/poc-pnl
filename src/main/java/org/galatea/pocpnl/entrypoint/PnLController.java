@@ -1,6 +1,8 @@
 package org.galatea.pocpnl.entrypoint;
 
+import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
+import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,8 @@ public class PnLController {
 
 	@Autowired
 	PositionRepository positionRepository;
+	@Autowired
+	PnLRepository pnlRepository;
 
 	@GetMapping("/positions")
 	public String getAllPositions(Model model) {
@@ -20,5 +24,14 @@ public class PnLController {
 		model.addAttribute("positions", positions);
 		return "positions"; // view
 	}
+	
+	@GetMapping("/pnl")
+	public String getAllPnL(Model model) {
+		Iterable<PnL> results = pnlRepository.findAll();
+
+		model.addAttribute("results", results);
+		return "pnlResults"; // view
+	}
+	
 
 }
