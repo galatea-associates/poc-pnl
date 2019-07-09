@@ -1,6 +1,5 @@
-package org.galatea.pocpnl.service;
+package org.galatea.pocpnl.service.valuation;
 
-import org.galatea.pocpnl.domain.ValuationResponse;
 import org.springframework.stereotype.Service;
 
 @Service

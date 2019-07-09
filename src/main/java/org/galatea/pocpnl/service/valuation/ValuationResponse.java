@@ -1,4 +1,4 @@
-package org.galatea.pocpnl.domain;
+package org.galatea.pocpnl.service.valuation;
 
 import lombok.Data;
 

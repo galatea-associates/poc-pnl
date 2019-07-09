@@ -1,6 +1,4 @@
-package org.galatea.pocpnl.service;
-
-import org.galatea.pocpnl.domain.ValuationResponse;
+package org.galatea.pocpnl.service.valuation;
 
 public interface IValuationService {
 
