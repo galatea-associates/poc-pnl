@@ -10,7 +10,7 @@ import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.service.valuation.IValuationService;
 import org.galatea.pocpnl.service.valuation.PnLResult;
 import org.galatea.pocpnl.service.valuation.ValuationInput;
-import org.galatea.pocpnl.service.valuation.ValuationReference;
+import org.galatea.pocpnl.service.valuation.ValuationReferenceKey;
 import org.galatea.pocpnl.service.valuation.ValuationResponse;
 import org.galatea.pocpnl.service.valuation.ValuationResult;
 import org.springframework.stereotype.Service;
@@ -54,32 +54,38 @@ public class PnLService {
 				log.info("Valuation for position {}: {}", position, valuationResponse);
 
 				// now need to get reference valuation to calculate P&L
-				ValuationReference valuationReference = getValuationReference(position);
-				ValuationResult referenceValuation = getReferenceValuation(valuationReference, referenceDate);
+				ValuationReferenceKey valuationReferenceKey = getValuationReference(position, referenceDate);
+				
+				ValuationResult referenceValuation = getReferenceValuation(valuationReferenceKey);
 				ValuationResult currentValuation = valuationResponse.getValuationResult();
 
-				PnLResult pnlResult = calculatePnl(currentValuation, referenceValuation);
-				log.info("PnL for valuationReference {} is {}", valuationReference, pnlResult);
+				PnLResult pnlResult = calculatePnl(currentValuation, referenceValuation, valuationReferenceKey);
+				log.info("P&L result: {}", pnlResult);
+				persistPnL(pnlResult);
 			}
 		}
 
 		log.info("PnL Calculation completed");
 	}
 
-	private PnLResult calculatePnl(ValuationResult currentValuation, ValuationResult referenceValuation) {
-		double pnl = currentValuation.getValuation() - referenceValuation.getValuation();
-		return new PnLResult(pnl, currentValuation, referenceValuation);
+	private void persistPnL(PnLResult pnlResult) {
+		log.info("Persisting P&L: {}", pnlResult);
 	}
 
-	private ValuationResult getReferenceValuation(ValuationReference valuationReference, LocalDate referenceDate) {
+	private PnLResult calculatePnl(ValuationResult currentValuation, ValuationResult referenceValuation, ValuationReferenceKey valuationReferenceKey) {
+		double pnl = currentValuation.getValuation() - referenceValuation.getValuation();
+		return new PnLResult(pnl, currentValuation, valuationReferenceKey);
+	}
+
+	private ValuationResult getReferenceValuation(ValuationReferenceKey valuationReferenceKey) {
 
 		// Fetch reference valuation
-		log.info("Fetching reference valuation for {} with ref date {}", valuationReference, referenceDate);
+		log.info("Fetching reference valuation for {}", valuationReferenceKey);
 		return new ValuationResult(40.0, "USD");
 	}
 
-	private ValuationReference getValuationReference(Position position) {
-		return new ValuationReference();
+	private ValuationReferenceKey getValuationReference(Position position, LocalDate referenceDate) {
+		return new ValuationReferenceKey(referenceDate);
 	}
 
 	private ValuationInput augmentValuationInput(ValuationResponse valuationResponse) {

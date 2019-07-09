@@ -6,7 +6,5 @@ import lombok.Data;
 public class PnLResult {
 	private final double pnl;
 	private final ValuationResult currentValuation;
-	private final ValuationResult referenceValuation;
-	
-	// Other relevant information to track
+	private final ValuationReferenceKey valuationReferenceKey;
 }
