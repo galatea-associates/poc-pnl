@@ -14,7 +14,7 @@
 			<tr>
 				<th scope="col">Book</th>
 				<th scope="col">Instrument</th>
-				<th scope="col">Price</th>
+				<th scope="col">Cost Basis</th>
 				<th scope="col">Qty</th>
 			</tr>
 		</thead>
@@ -22,7 +22,7 @@
 			<tr th:each="position: ${positions}" scope="row">
 				<td th:text="${position.book}" />
 				<td th:text="${position.instrument}" />
-				<td th:text="${position.price}" />
+				<td th:text="${position.costBasis}" />
 				<td th:text="${position.qty}" />
 			</tr>
 
