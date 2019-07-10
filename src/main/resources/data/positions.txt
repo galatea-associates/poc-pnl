@@ -1,0 +1,2 @@
+{"book":"book1","instrument":"inst1","qty":2,"costBasis":10.5}
+{"book":"book2","instrument":"inst2","qty":4,"costBasis":10.5}

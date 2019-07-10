@@ -3,7 +3,7 @@ package org.galatea.pocpnl.service.valuation;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.galatea.pocpnl.domain.Valuation;
+import org.galatea.pocpnl.domain.ValuationResult;
 
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -13,11 +13,11 @@ import lombok.Value;
 @Value
 public class ValuationResponse {
 
-  private Valuation valuationResult;
+  private ValuationResult valuationResult;
 
   @Default
   private ValuationInput valuationInput = new ValuationInput();
-
+  
   @Default
   private Set<String> missingInput = new HashSet<>();
 

@@ -32,11 +32,11 @@ public class PnL {
   private LocalDate date;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "referenceValuationId", referencedColumnName = "valuationId")
+  @JoinColumn(name = "referenceValuationId", referencedColumnName = "id")
   private Valuation referenceValuation;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "currentValuationId", referencedColumnName = "valuationId")
+  @JoinColumn(name = "currentValuationId", referencedColumnName = "id")
   private Valuation currentValuation;
 
   private BigDecimal pnl;

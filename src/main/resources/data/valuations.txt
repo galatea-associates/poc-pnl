@@ -1,0 +1,2 @@
+{"id":0,"book":"book1","instrument":"inst1","date":{"year":2019,"month":7,"day":9},"valuation":5,"valuationInput":{"id":0,"numericInputData":{"Instrument.Price":5.0,"Position.Quantity":2},"textInputData":{}}}
+{"id":0,"book":"book2","instrument":"inst2","date":{"year":2019,"month":7,"day":9},"valuation":4,"valuationInput":{"id":0,"numericInputData":{"Instrument.Price":4.0,"Position.Quantity":5},"textInputData":{}}}

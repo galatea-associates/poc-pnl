@@ -16,7 +16,11 @@
 				<th scope="col">Instrument</th>
 				<th scope="col">P&L</th>
 				<th scope="col">Current Valuation</th>
+				<th scope="col">Current Qty</th>
+				<th scope="col">Current Price</th>
 				<th scope="col">Reference Valuation</th>
+				<th scope="col">Reference Qty</th>
+				<th scope="col">Reference Price</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -24,8 +28,12 @@
 				<td th:text="${result.book}" />
 				<td th:text="${result.instrument}" />
 				<td th:text="${result.pnl}" />
-				<td th:text="${result.currentValuation.valuation}" />
+				<td th:text='${result.currentValuation.valuation}' />
+				<td th:text='${result.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+				<td th:text='${result.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
 				<td th:text="${result.referenceValuation.valuation}" />
+				<td th:text='${result.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+				<td th:text='${result.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
 			</tr>
 
 		</tbody>
