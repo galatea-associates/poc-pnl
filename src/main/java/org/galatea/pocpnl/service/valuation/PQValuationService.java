@@ -1,11 +1,11 @@
 package org.galatea.pocpnl.service.valuation;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.galatea.pocpnl.domain.Valuation;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,8 @@ public class PQValuationService implements IValuationService {
     double price = (double) valuationInput.get(PRICE);
     int qty = (int) valuationInput.get(QTY);
 
-    Valuation valuationResult = Valuation.builder().book(book).instrument(instrument).date(LocalDate.now()).valuation(price*qty).build();
+    Valuation valuationResult =
+        Valuation.builder().book(book).instrument(instrument).date(LocalDate.now()).valuation(BigDecimal.valueOf(price * qty)).build();
     return ValuationResponse.builder().valuationInput(valuationInput).valuationResult(valuationResult).build();
   }
 
