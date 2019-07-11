@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class ValuationResult {
 
-  private BigDecimal valuation;
+  private BigDecimal instrumentCurrencyValuation;
+  private BigDecimal bookCurrencyValuation;
+  private double fxRate;
 
 }

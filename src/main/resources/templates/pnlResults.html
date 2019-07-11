@@ -8,36 +8,57 @@
 	rel="stylesheet">
 </head>
 <body>
-
-	<table class="table">
+	<table class="table table-responsive">
 		<thead>
 			<tr>
 				<th scope="col">Book</th>
 				<th scope="col">Instrument</th>
-				<th scope="col">P&L</th>
-				<th scope="col">Current Valuation</th>
 				<th scope="col">Current Qty</th>
 				<th scope="col">Current Price</th>
-				<th scope="col">Reference Valuation</th>
+				<th scope="col">Current Valuation (Instrument Currency)</th>
+				<th scope="col">Current FX Rate</th>
+				<th scope="col">Current Valuation (Book Currency)</th>
 				<th scope="col">Reference Qty</th>
 				<th scope="col">Reference Price</th>
+				<th scope="col">Reference Valuation (Instrument Currency)</th>
+				<th scope="col">Reference FX Rate</th>
+				<th scope="col">Reference Valuation (Book Currency)</th>
+				<th scope="col">MTM P&L</th>
+				<th scope="col">MTM P&L (Current FX Rate)</th>
+				<th scope="col">FX P&L</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="result: ${results}" scope="row">
 				<td th:text="${result.book}" />
 				<td th:text="${result.instrument}" />
-				<td th:text="${result.pnl}" />
-				<td th:text='${result.currentValuation.valuation}' />
-				<td th:text='${result.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
-				<td th:text='${result.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
-				<td th:text="${result.referenceValuation.valuation}" />
-				<td th:text='${result.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
-				<td th:text='${result.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.currentValuation.instrumentCurrencyValuation}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.numericInputData.get("FX.Rate")}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.textInputData.get("Book.Currency")} +${result.currentValuation.bookCurrencyValuation}' />
+				<td
+					th:text='${result.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+				<td
+					th:text='${result.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+				<td
+					th:text='${result.referenceValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.referenceValuation.instrumentCurrencyValuation}' />
+				<td th:text='1.0' />
+				<td
+					th:text='${result.referenceValuation.valuationInput.textInputData.get("Book.Currency")} +${result.referenceValuation.bookCurrencyValuation}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} +${result.mtmPnL}' />
+				<td
+					th:text='${result.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.mtmPnLFx}' />
+				<td th:text="${result.fxPnL}" />
 			</tr>
 
 		</tbody>
 	</table>
-
 </body>
 </html>

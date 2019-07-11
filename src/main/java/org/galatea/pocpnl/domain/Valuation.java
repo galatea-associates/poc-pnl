@@ -2,6 +2,7 @@ package org.galatea.pocpnl.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 
 @Builder
 @Data
@@ -34,7 +36,10 @@ public class Valuation {
 	private String book;
 	private String instrument;
 	private LocalDate date;
-	private BigDecimal valuation;
+	private BigDecimal instrumentCurrencyValuation;
+	private BigDecimal bookCurrencyValuation;
+	@Default
+	private double fxRate = 1.0;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "valuationInput", referencedColumnName = "id")

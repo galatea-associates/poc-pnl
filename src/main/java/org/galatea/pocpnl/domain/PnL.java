@@ -39,7 +39,9 @@ public class PnL {
   @JoinColumn(name = "currentValuationId", referencedColumnName = "id")
   private Valuation currentValuation;
 
-  private BigDecimal pnl;
+  private BigDecimal mtmPnL;
+  private BigDecimal mtmPnLFx;
+  private BigDecimal fxPnL;
 
   @Data
   static class PnLId implements Serializable {

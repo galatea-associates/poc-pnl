@@ -1,2 +1,2 @@
-{"book":"EQTY1","instrument":"TSLA","qty":500,"costBasis":70.03}
+{"book":"EQTY1","instrument":"TSLA","qty":500,"costBasis":70.00}
 {"book":"EQTY1","instrument":"IBM","qty":700,"costBasis":94.00}
