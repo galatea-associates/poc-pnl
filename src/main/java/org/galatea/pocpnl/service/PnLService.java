@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.galatea.pocpnl.domain.PnL;
+import org.galatea.pocpnl.domain.UnRealizedPnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.RealizedPnl;
 import org.galatea.pocpnl.domain.Trade;
@@ -69,55 +69,15 @@ public class PnLService {
         log.info("Calculating P&L for [{}, {}]", book, instrument);
 
         List<Position> positions = getPositionsForBookInstrument(book, instrument);
-
-        for (Position position : positions) {
-          log.info("Valuating position: {}", position);
-          ValuationInput valuationInput = new ValuationInput();
-
-          ValuationResponse valuationResponse = valuationService.value(valuationInput);
-          while (valuationResponse.isMoreDataNeeded()) {
-            log.info("More data needed for valuating position: {}, {}", position,
-                valuationResponse);
-            // get more data and revalue..
-            valuationInput = augmentValuationInput(valuationResponse, position);
-
-            // What should we do if we can't find inputs required for valuation?
-            valuationResponse = valuationService.value(valuationInput);
-          }
-
-          log.info("Valuation for position {}: {}", position, valuationResponse);
-
-          // now need to get reference valuation to calculate P&L
-          ValuationKey referenceValuationKey = getReferenceValuationKey(position, referenceDate);
-
-          Valuation referenceValuation = getReferenceValuation(referenceValuationKey);
-          Valuation currentValuation = Valuation.builder().book(position.getBook())
-              .instrument(position.getInstrument()).date(eodDate)
-              .instrumentCurrencyValuation(
-                  valuationResponse.getValuationResult().getInstrumentCurrencyValuation())
-              .bookCurrencyValuation(
-                  valuationResponse.getValuationResult().getBookCurrencyValuation())
-              .valuationInput(valuationResponse.getValuationInput())
-              .fxRate(valuationResponse.getValuationResult().getFxRate()).build();
-
-          PnL pnlResult = calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
-          log.info("P&L result: {}", pnlResult);
-          persistPnL(pnlResult);
-        }
+        Position position = positions.get(0);
+        UnRealizedPnL pnlResult = calculateUnrealizedPnL(eodDate, referenceDate, position);
+        persistPnL(pnlResult);
 
         // TODO: now that we have the positional component of P&L, need the realized P&L
         // (from trades made
         // after the reference date up to and including today)
         List<Trade> trades = getTradesForBookInstrument(book, instrument, referenceDate, eodDate);
-        RealizedPnl realizedPnl = new RealizedPnl();
-        for (Trade trade : trades) {
-          log.info("Applying impact of trade {} to realized P&L", trade);
-          // calculate Realized PnL
-          realizedPnl.addProceeds(trade.getValue());
-          realizedPnl.addFees(trade.getFee());
-          realizedPnl.addCommissions(trade.getCommission());
-          log.info("Applied impact of trade {} to realized P&L: {}", trade, realizedPnl);
-        }
+        RealizedPnl realizedPnl = calculateRealizedPnL(trades);
         log.info("Calculated realized P&L for [{}, {}]: {}", book, instrument, realizedPnl);
       }
     }
@@ -125,12 +85,66 @@ public class PnLService {
     log.info("PnL Calculation completed");
   }
 
-  private void persistPnL(PnL pnlResult) {
+  private UnRealizedPnL calculateUnrealizedPnL(LocalDate eodDate, LocalDate referenceDate,
+      Position position) {
+    log.info("Valuating position: {}", position);
+    ValuationResponse valuationResponse = getValuation(position);
+    log.info("Valuation for position {}: {}", position, valuationResponse);
+
+    // now need to get reference valuation to calculate P&L
+    // TODO: do we really need this Object?
+    ValuationKey referenceValuationKey = getReferenceValuationKey(position, referenceDate);
+
+    Valuation referenceValuation = getReferenceValuation(referenceValuationKey);
+    Valuation currentValuation = Valuation.builder().book(position.getBook())
+        .instrument(position.getInstrument()).date(eodDate)
+        .instrumentCurrencyValuation(
+            valuationResponse.getValuationResult().getInstrumentCurrencyValuation())
+        .bookCurrencyValuation(
+            valuationResponse.getValuationResult().getBookCurrencyValuation())
+        .valuationInput(valuationResponse.getValuationInput())
+        .fxRate(valuationResponse.getValuationResult().getFxRate()).build();
+
+    UnRealizedPnL pnlResult = calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
+    log.info("P&L result: {}", pnlResult);
+    return pnlResult;
+  }
+
+  private RealizedPnl calculateRealizedPnL(List<Trade> trades) {
+    RealizedPnl realizedPnl = new RealizedPnl();
+    for (Trade trade : trades) {
+      log.info("Applying impact of trade {} to realized P&L", trade);
+      // calculate Realized PnL
+      realizedPnl.addProceeds(trade.getValue());
+      realizedPnl.addFees(trade.getFee());
+      realizedPnl.addCommissions(trade.getCommission());
+      log.info("Applied impact of trade {} to realized P&L: {}", trade, realizedPnl);
+    }
+    return realizedPnl;
+  }
+
+  private ValuationResponse getValuation(Position position) {
+    ValuationInput valuationInput = new ValuationInput();
+
+    ValuationResponse valuationResponse = valuationService.value(valuationInput);
+    while (valuationResponse.isMoreDataNeeded()) {
+      log.info("More data needed for valuating position: {}, {}", position,
+          valuationResponse);
+      // get more data and revalue..
+      valuationInput = augmentValuationInput(valuationResponse, position);
+
+      // What should we do if we can't find inputs required for valuation?
+      valuationResponse = valuationService.value(valuationInput);
+    }
+    return valuationResponse;
+  }
+
+  private void persistPnL(UnRealizedPnL pnlResult) {
     log.info("Persisting P&L: {}", pnlResult);
     pnlRepository.save(pnlResult);
   }
 
-  private PnL calculatePnl(Valuation currentValuation, Valuation referenceValuation,
+  private UnRealizedPnL calculatePnl(Valuation currentValuation, Valuation referenceValuation,
       ValuationKey valuationReferenceKey) {
 
     BigDecimal mtmPnL = currentValuation.getInstrumentCurrencyValuation()
@@ -142,7 +156,7 @@ public class PnLService {
         .subtract(referenceValuation.getBookCurrencyValuation());
 
     log.info("Calculated P&L {} from {}, {}", mtmPnL, currentValuation, referenceValuation);
-    return PnL.builder().book(valuationReferenceKey.getBook())
+    return UnRealizedPnL.builder().book(valuationReferenceKey.getBook())
         .instrument(valuationReferenceKey.getInstrument())
         .date(LocalDate.now()).referenceValuation(referenceValuation)
         .currentValuation(currentValuation)
@@ -152,10 +166,9 @@ public class PnLService {
   private Valuation getReferenceValuation(ValuationKey valuationReferenceKey) {
     // Fetch reference valuation
     log.info("Fetching reference valuation for {}", valuationReferenceKey);
-    List<Valuation> results =
+    Valuation result =
         valuationRepository.findByBookAndInstrumentAndDate(valuationReferenceKey.getBook(),
-            valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate());
-    Valuation result = results.get(0);
+            valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate()).get();
     log.info("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
     return result;
   }
@@ -251,7 +264,5 @@ public class PnLService {
     log.info("Found {} positions for [{}, {}]: {}", positions.size(), book, instrument, positions);
     return positions;
   }
-
-
 
 }

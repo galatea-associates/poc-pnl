@@ -18,11 +18,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "pnl")
-@IdClass(PnL.PnLId.class)
+@IdClass(UnRealizedPnL.PnLId.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PnL {
+public class UnRealizedPnL {
 
   @Id
   private String book;

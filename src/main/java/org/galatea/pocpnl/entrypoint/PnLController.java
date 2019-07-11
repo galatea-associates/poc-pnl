@@ -1,6 +1,6 @@
 package org.galatea.pocpnl.entrypoint;
 
-import org.galatea.pocpnl.domain.PnL;
+import org.galatea.pocpnl.domain.UnRealizedPnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
@@ -27,7 +27,7 @@ public class PnLController {
 
   @GetMapping("/pnl")
   public String getAllPnL(Model model) {
-    Iterable<PnL> results = pnlRepository.findAll();
+    Iterable<UnRealizedPnL> results = pnlRepository.findAll();
 
     model.addAttribute("results", results);
     return "pnlResults"; // view
