@@ -2,6 +2,7 @@
 package org.galatea.pocpnl.domain;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -30,6 +31,8 @@ public class Position {
   private int qty;
 
   private double costBasis;
+
+  private LocalDate date;
 
   @Data
   static class PositionId implements Serializable {
