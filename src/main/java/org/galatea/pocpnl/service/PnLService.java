@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Set;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.galatea.pocpnl.domain.UnRealizedPnL;
+import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.RealizedPnl;
 import org.galatea.pocpnl.domain.Trade;
+import org.galatea.pocpnl.domain.UnRealizedPnL;
 import org.galatea.pocpnl.domain.Valuation;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
@@ -70,8 +71,7 @@ public class PnLService {
 
         List<Position> positions = getPositionsForBookInstrument(book, instrument);
         Position position = positions.get(0);
-        UnRealizedPnL pnlResult = calculateUnrealizedPnL(eodDate, referenceDate, position);
-        persistPnL(pnlResult);
+        UnRealizedPnL unrealizedPnl = calculateUnrealizedPnL(eodDate, referenceDate, position);
 
         // TODO: now that we have the positional component of P&L, need the realized P&L
         // (from trades made
@@ -79,6 +79,10 @@ public class PnLService {
         List<Trade> trades = getTradesForBookInstrument(book, instrument, referenceDate, eodDate);
         RealizedPnl realizedPnl = calculateRealizedPnL(trades);
         log.info("Calculated realized P&L for [{}, {}]: {}", book, instrument, realizedPnl);
+
+        PnL pnlResult = PnL.builder().book(book).instrument(instrument).date(eodDate)
+            .unrealizedPnL(unrealizedPnl).realizedPnL(realizedPnl).build();
+        persistPnL(pnlResult);
       }
     }
 
@@ -105,7 +109,8 @@ public class PnLService {
         .valuationInput(valuationResponse.getValuationInput())
         .fxRate(valuationResponse.getValuationResult().getFxRate()).build();
 
-    UnRealizedPnL pnlResult = calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
+    UnRealizedPnL pnlResult =
+        calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
     log.info("P&L result: {}", pnlResult);
     return pnlResult;
   }
@@ -139,7 +144,7 @@ public class PnLService {
     return valuationResponse;
   }
 
-  private void persistPnL(UnRealizedPnL pnlResult) {
+  private void persistPnL(PnL pnlResult) {
     log.info("Persisting P&L: {}", pnlResult);
     pnlRepository.save(pnlResult);
   }
@@ -156,9 +161,8 @@ public class PnLService {
         .subtract(referenceValuation.getBookCurrencyValuation());
 
     log.info("Calculated P&L {} from {}, {}", mtmPnL, currentValuation, referenceValuation);
-    return UnRealizedPnL.builder().book(valuationReferenceKey.getBook())
-        .instrument(valuationReferenceKey.getInstrument())
-        .date(LocalDate.now()).referenceValuation(referenceValuation)
+    return UnRealizedPnL.builder()
+        .referenceValuation(referenceValuation)
         .currentValuation(currentValuation)
         .mtmPnL(mtmPnL).mtmPnLFx(mtmPnLFx).fxPnL(fxPnL).build();
   }

@@ -33,29 +33,29 @@
 				<td th:text="${result.book}" />
 				<td th:text="${result.instrument}" />
 				<td
-					th:text='${result.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
 				<td
-					th:text='${result.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
 				<td
-					th:text='${result.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.currentValuation.instrumentCurrencyValuation}' />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}' />
 				<td
-					th:text='${result.currentValuation.valuationInput.numericInputData.get("FX.Rate")}' />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("FX.Rate")}' />
 				<td
-					th:text='${result.currentValuation.valuationInput.textInputData.get("Book.Currency")} +${result.currentValuation.bookCurrencyValuation}' />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} +${result.unrealizedPnL.currentValuation.bookCurrencyValuation}' />
 				<td
-					th:text='${result.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
 				<td
-					th:text='${result.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
 				<td
-					th:text='${result.referenceValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.referenceValuation.instrumentCurrencyValuation}' />
+					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}' />
 				<td th:text='1.0' />
 				<td
-					th:text='${result.referenceValuation.valuationInput.textInputData.get("Book.Currency")} +${result.referenceValuation.bookCurrencyValuation}' />
+					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.textInputData.get("Book.Currency")} +${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}' />
 				<td
-					th:text='${result.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} +${result.mtmPnL}' />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} +${result.unrealizedPnL.mtmPnL}' />
 				<td
-					th:text='${result.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.mtmPnLFx}' />
-				<td th:text="${result.fxPnL}" />
+					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.mtmPnLFx}' />
+				<td th:text="${result.unrealizedPnL.fxPnL}" />
 			</tr>
 
 		</tbody>

@@ -2,9 +2,11 @@
 package org.galatea.pocpnl.domain;
 
 import java.math.BigDecimal;
+import javax.persistence.Embeddable;
 import lombok.Data;
 
 
+@Embeddable
 @Data
 public class RealizedPnl {
 
