@@ -1,5 +1,6 @@
 package org.galatea.pocpnl.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import org.galatea.pocpnl.domain.Position;
@@ -10,7 +11,13 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
   List<Position> findByBook(String book);
 
+  List<Position> findByBookAndInstrument(String book, String instrument);
+
   @Query("SELECT DISTINCT book FROM Position")
   Set<String> findDistinctBook();
+
+  @Query("SELECT DISTINCT instrument FROM Position WHERE book=?1 and date=?2")
+  Set<String> findDistinctInstrumentByBookAndDate(String book, LocalDate date);
+
 
 }
