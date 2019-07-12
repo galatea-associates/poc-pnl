@@ -12,71 +12,78 @@
 
 
 
-<script
-  src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
-  
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/cr-1.5.0/datatables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"
+	integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+	crossorigin="anonymous"></script>
 
+<script type="text/javascript"
+	src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/cr-1.5.0/datatables.min.js"></script>
 <body>
 
 
-    <div class="container">
-	<table class="table" id="table_id">
-		<thead>
-			<tr>
-				<th scope="col">Date</th>
-				<th scope="col">Book</th>
-				<th scope="col">Instrument</th>
-				<th scope="col">Reference Qty</th>
-				<th scope="col">Reference Price</th>
-				<th scope="col">Reference Valuation (Instrument Currency)</th>
-				<th scope="col">Reference FX Rate</th>
-				<th scope="col">Reference Valuation (Book Currency)</th>
-				<th scope="col">Current Qty</th>
-				<th scope="col">Current Price</th>
-				<th scope="col">Current Valuation (Instrument Currency)</th>
-				<th scope="col">Current FX Rate</th>
-				<th scope="col">Current Valuation (Book Currency)</th>
-				<th scope="col">MTM P&L</th>
-				<th scope="col">MTM P&L (Book Currency)</th>
-				<th scope="col">FX P&L</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="result: ${results}" scope="row">
-				<td th:text="${result.date}" />
-				<td th:text="${result.book}" />
-				<td th:text="${result.instrument}" />
-				<td
-					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
-				<td
-					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
-				<td
-					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}' />
-				<td th:text='${result.unrealizedPnL.referenceValuation.fxRate}' />
-				<td
-					th:text='${result.unrealizedPnL.referenceValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}' />
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}' />
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.fxRate}' />				
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.currentValuation.bookCurrencyValuation}' />
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.mtmPnL}' />
-				<td
-					th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.mtmPnLFx}' />
-				<td th:text="${result.unrealizedPnL.fxPnL}" />
-			</tr>
+	<div class="container">
+		<table class="table" id="table_id">
+			<thead>
+				<tr>
+					<th scope="col">Date</th>
+					<th scope="col">Book</th>
+					<th scope="col">Instrument</th>
+					<th scope="col">Reference Qty</th>
+					<th scope="col">Reference Price</th>
+					<th scope="col">Reference Valuation (Instrument Currency)</th>
+					<th scope="col">Reference FX Rate</th>
+					<th scope="col">Reference Valuation (Book Currency)</th>
+					<th scope="col">Current Qty</th>
+					<th scope="col">Current Price</th>
+					<th scope="col">Current Valuation (Instrument Currency)</th>
+					<th scope="col">Current FX Rate</th>
+					<th scope="col">Current Valuation (Book Currency)</th>
+					<th scope="col">MTM P&L</th>
+					<th scope="col">MTM P&L (Book Currency)</th>
+					<th scope="col">FX P&L</th>
+					<th scope="col">LTD MTM P&L</th>
+					<th scope="col">LTD MTM P&L (Book Currency)</th>
+					<th scope="col">LTD FX P&L</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="result: ${results}" scope="row">
+					<td th:text="${result.date}" />
+					<td th:text="${result.book}" />
+					<td th:text="${result.instrument}" />
+					<td
+						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+					<td
+						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+					<td
+						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}' />
+					<td th:text='${result.unrealizedPnL.referenceValuation.fxRate}' />
+					<td
+						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("Position.Quantity")}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.numericInputData.get("Instrument.Price")}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}' />
+					<td th:text='${result.unrealizedPnL.currentValuation.fxRate}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.currentValuation.bookCurrencyValuation}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.mtmPnL}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.mtmPnLFx}' />
+					<td th:text="${result.unrealizedPnL.fxPnL}" />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Instrument.Currency")} + ${result.unrealizedPnL.ltdMtmPnL}' />
+					<td
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.textInputData.get("Book.Currency")} + ${result.unrealizedPnL.ltdMtmPnLFx}' />
+					<td th:text="${result.unrealizedPnL.ltdFxPnL}" />
+					
+				</tr>
 
-		</tbody>
-	</table>
+			</tbody>
+		</table>
 	</div>
 	<script>
 		$(document).ready(function() {
@@ -84,27 +91,20 @@
 				"scrollY" : "100%",
 				"scrollX" : "100%",
 				"paging" : false,
-				"colReorder": true,
-				"stateSave": true,
-				"dom": '<"form-group"B><"form-group "f>tp',
-		        "columnDefs": [
-		            {
-		                targets: 1,
-		                className: 'noVis'
-		            }
-		        ],
-		        buttons: [
-		            {
-		                extend: 'colvis',
-		                columns: ':not(.noVis)'
-		            }
-		        ]
-			    
+				"colReorder" : true,
+				"stateSave" : true,
+				"dom" : '<"form-group"B><"form-group "f>tp',
+				"columnDefs" : [ {
+					targets : 1,
+					className : 'noVis'
+				} ],
+				buttons : [ {
+					extend : 'colvis',
+					columns : ':not(.noVis)'
+				} ]
+
 			});
 		});
-		
-		
-		
 	</script>
 </body>
 </html>
