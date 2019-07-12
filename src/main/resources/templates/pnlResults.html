@@ -8,16 +8,22 @@
 	rel="stylesheet">
 <link rel="stylesheet" type="text/css"
 	href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/datatables.min.css" />
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
-<script type="text/javascript"
-	src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/datatables.min.js"></script>
+
+
+
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/cr-1.5.0/datatables.min.js"></script>
+
 <body>
 
 
-    <div>
-	<table class="table table-responsive" id="table_id">
+    <div class="container">
+	<table class="table" id="table_id">
 		<thead>
 			<tr>
 				<th scope="col">Date</th>
@@ -75,19 +81,25 @@
 	<script>
 		$(document).ready(function() {
 			var table = $('#table_id').DataTable({
-				"scrollY" : "200px",
+				"scrollY" : "100%",
+				"scrollX" : "100%",
 				"paging" : false,
-				"colReorder": true
-			});
-
-			$('a.toggle-vis').on('click', function(e) {
-				e.preventDefault();
-
-				// Get the column API object
-				var column = table.column($(this).attr('data-column'));
-
-				// Toggle the visibility
-				column.visible(!column.visible());
+				"colReorder": true,
+				"stateSave": true,
+				"dom": '<"form-group"B><"form-group "f>tp',
+		        "columnDefs": [
+		            {
+		                targets: 1,
+		                className: 'noVis'
+		            }
+		        ],
+		        buttons: [
+		            {
+		                extend: 'colvis',
+		                columns: ':not(.noVis)'
+		            }
+		        ]
+			    
 			});
 		});
 		
