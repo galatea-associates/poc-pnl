@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,9 +26,25 @@ public class UnRealizedPnL {
   @JoinColumn(name = "currentValuationId", referencedColumnName = "id")
   private Valuation currentValuation;
 
-  private BigDecimal mtmPnL;
-  private BigDecimal mtmPnLFx;
-  private BigDecimal fxPnL;
+  @Default
+  private BigDecimal mtmPnL = new BigDecimal(0);;
+  @Default
+  private BigDecimal mtmPnLFx = new BigDecimal(0);;
+  @Default
+  private BigDecimal fxPnL = new BigDecimal(0);;
+
+
+  public void addMtmPnL(BigDecimal mtmPnl) {
+    this.mtmPnL = this.mtmPnL.add(mtmPnl);
+  }
+
+  public void addMtmPnLFx(BigDecimal mtmPnLFx) {
+    this.mtmPnLFx = this.mtmPnLFx.add(mtmPnLFx);
+  }
+
+  public void addFxPnL(BigDecimal fxPnL) {
+    this.fxPnL = this.fxPnL.add(fxPnL);
+  }
 
 
 }

@@ -18,12 +18,24 @@ public class RealizedPnl {
     this.proceeds = this.proceeds.add(BigDecimal.valueOf(proceeds));
   }
 
+  public void addProceeds(BigDecimal proceeds) {
+    this.proceeds = this.proceeds.add(proceeds);
+  }
+
   public void addFees(double fees) {
     this.fees = this.fees.add(BigDecimal.valueOf(fees));
   }
 
+  public void addFees(BigDecimal fees) {
+    this.fees = this.fees.add(fees);
+  }
+
   public void addCommissions(double commissions) {
     this.commissions = this.commissions.add(BigDecimal.valueOf(commissions));
+  }
+
+  public void addCommissions(BigDecimal commissions) {
+    this.commissions = this.commissions.add(commissions);
   }
 
 }

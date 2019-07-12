@@ -31,7 +31,8 @@ public class Position {
   private int qty;
 
   private double costBasis;
-
+  @Id
+  @NotNull
   private LocalDate date;
 
   @Data
@@ -39,5 +40,6 @@ public class Position {
     private static final long serialVersionUID = 1L;
     private String book;
     private String instrument;
+    private LocalDate date;
   }
 }

@@ -14,6 +14,7 @@ public class App {
     ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
     context.getBean(DataImportService.class).importData();
     context.getBean(PnLService.class).calculateEODPnL(LocalDate.parse("2019-07-10"));
+    context.getBean(PnLService.class).calculateEODPnL(LocalDate.parse("2019-07-11"));
   }
 
 }
