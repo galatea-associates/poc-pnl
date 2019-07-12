@@ -185,11 +185,10 @@ public class PnLService {
           break;
         case PRICE:
           // TODO: lookup price for this instrument
-          // for now, move the price somewhere within +/- 10% of the cost basis for the
-          // position
-          double spotPrice = position.getCostBasis(); // (int) (position.getCostBasis() * (.9 +
-                                                      // Math.random() / 5)
-                                                      // * 100) / 100d;
+          // double spotPrice = position.getCostBasis();
+
+          // for now, move the price somewhere within +/- 10% of the cost basis for the position
+          double spotPrice = (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
           inputData.addInput(input, spotPrice);
           break;
         case QTY:
@@ -202,7 +201,8 @@ public class PnLService {
           inputData.addInput(input, "USD");
           break;
         case FX_RATE:
-          inputData.addInput(input, 1.1);
+          // assume if we're asked, we're looking for HKD->USD
+          inputData.addInput(input, 0.1275);
           break;
         default:
           // TODO: handle this error.
