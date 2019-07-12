@@ -11,7 +11,7 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
   List<Position> findByBook(String book);
 
-  List<Position> findByBookAndInstrument(String book, String instrument);
+  List<Position> findByBookAndInstrumentAndDate(String book, String instrument, LocalDate eodDate);
 
   @Query("SELECT DISTINCT book FROM Position")
   Set<String> findDistinctBook();

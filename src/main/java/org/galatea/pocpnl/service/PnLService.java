@@ -3,15 +3,18 @@ package org.galatea.pocpnl.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.pocpnl.domain.LTDPnL;
 import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.RealizedPnl;
 import org.galatea.pocpnl.domain.Trade;
 import org.galatea.pocpnl.domain.UnRealizedPnL;
 import org.galatea.pocpnl.domain.Valuation;
+import org.galatea.pocpnl.repository.LTDPnLRepository;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.TradeRepository;
@@ -48,6 +51,9 @@ public class PnLService {
   private PnLRepository pnlRepository;
 
   @Autowired
+  private LTDPnLRepository ltdPnlRepository;
+
+  @Autowired
   private TradeRepository tradeRepository;
 
   @Transactional
@@ -68,27 +74,80 @@ public class PnLService {
 
       for (String instrument : instruments) {
         log.info("Calculating P&L for [{}, {}]", book, instrument);
-
-        List<Position> positions = getPositionsForBookInstrument(book, instrument);
-        Position position = positions.get(0);
-        UnRealizedPnL unrealizedPnl = calculateUnrealizedPnL(eodDate, referenceDate, position);
-
-        // TODO: now that we have the positional component of P&L, need the realized P&L
-        // (from trades made
-        // after the reference date up to and including today)
-        List<Trade> trades = getTradesForBookInstrument(book, instrument, referenceDate, eodDate);
-        RealizedPnl realizedPnl = calculateRealizedPnL(trades);
-        log.info("Calculated realized P&L for [{}, {}]: {}", book, instrument, realizedPnl);
-
-        PnL pnlResult = PnL.builder().book(book).instrument(instrument).date(eodDate).unrealizedPnL(unrealizedPnl).realizedPnL(realizedPnl).build();
-        persistPnL(pnlResult);
+        PnL eodPnL = calculatePnL(eodDate, referenceDate, book, instrument);
+        eodPnL = persistPnL(eodPnL);
+        LTDPnL ltdPnL = calculateLTDPnl(book, instrument, eodDate, eodPnL);
+        persistPnL(ltdPnL);
       }
     }
 
     log.info("PnL Calculation completed");
   }
 
-  private UnRealizedPnL calculateUnrealizedPnL(LocalDate eodDate, LocalDate referenceDate, Position position) {
+  private void persistPnL(LTDPnL ltdPnL) {
+    ltdPnlRepository.save(ltdPnL);
+  }
+
+  private LTDPnL calculateLTDPnl(String book, String instrument, LocalDate eodDate, PnL EODPnL) {
+
+    UnRealizedPnL currentUnRealizedPnL = EODPnL.getUnrealizedPnL();
+    UnRealizedPnL ltdUnRealizedPnL = new UnRealizedPnL();
+    ltdUnRealizedPnL.addMtmPnL(currentUnRealizedPnL.getMtmPnL());
+    ltdUnRealizedPnL.addMtmPnLFx(currentUnRealizedPnL.getMtmPnLFx());
+    ltdUnRealizedPnL.addFxPnL(currentUnRealizedPnL.getFxPnL());
+
+    RealizedPnl currentRealizedPnL = EODPnL.getRealizedPnL();
+    RealizedPnl ltdRealizedPnL = new RealizedPnl();
+    ltdRealizedPnL.addCommissions(currentRealizedPnL.getCommissions());
+    ltdRealizedPnL.addFees(currentRealizedPnL.getFees());
+    ltdRealizedPnL.addProceeds(currentRealizedPnL.getProceeds());
+
+    // Get previous PNL
+    LocalDate referenceDate = getReferenceDate(eodDate);
+    Optional<PnL> previousPnl = pnlRepository
+        .findByBookAndInstrumentAndDate(book, instrument, referenceDate);
+
+    if (previousPnl.isPresent()) {
+      UnRealizedPnL previousUnRealizedPnL = previousPnl.get().getUnrealizedPnL();
+      ltdUnRealizedPnL.addMtmPnL(previousUnRealizedPnL.getMtmPnL());
+      ltdUnRealizedPnL.addMtmPnLFx(previousUnRealizedPnL.getMtmPnLFx());
+      ltdUnRealizedPnL.addFxPnL(previousUnRealizedPnL.getFxPnL());
+
+
+      RealizedPnl previousRealizedPnL = previousPnl.get().getRealizedPnL();
+      ltdRealizedPnL.addCommissions(previousRealizedPnL.getCommissions());
+      ltdRealizedPnL.addFees(previousRealizedPnL.getFees());
+      ltdRealizedPnL.addProceeds(previousRealizedPnL.getProceeds());
+    } else {
+      log.warn("Could not found P&L for [{}, {}]: {}", book, instrument, referenceDate);
+    }
+
+    LTDPnL ltdPnL = LTDPnL.builder().book(book).instrument(instrument).date(eodDate)
+        .ltdUnrealizedPnL(ltdUnRealizedPnL).ltdRealizedPnL(ltdRealizedPnL).build();
+    log.info("Calculated LTD P&L for [{}, {}]: {}", book, instrument, ltdPnL);
+    return ltdPnL;
+  }
+
+  private PnL calculatePnL(LocalDate eodDate, LocalDate referenceDate, String book,
+      String instrument) {
+    Position position = getPositionsForBookInstrument(book, instrument, eodDate).get(0);
+    UnRealizedPnL unrealizedPnl = calculateUnrealizedPnL(eodDate, referenceDate, position);
+    log.info("Calculated unrealized P&L for [{}, {}]: {}", book, instrument, unrealizedPnl);
+
+    // TODO: now that we have the positional component of P&L, need the realized P&L
+    // (from trades made
+    // after the reference date up to and including today)
+    List<Trade> trades = getTradesForBookInstrument(book, instrument, referenceDate, eodDate);
+    RealizedPnl realizedPnl = calculateRealizedPnL(trades);
+    log.info("Calculated realized P&L for [{}, {}]: {}", book, instrument, realizedPnl);
+
+    PnL pnlResult = PnL.builder().book(book).instrument(instrument).date(eodDate)
+        .unrealizedPnL(unrealizedPnl).realizedPnL(realizedPnl).build();
+    return pnlResult;
+  }
+
+  private UnRealizedPnL calculateUnrealizedPnL(LocalDate eodDate, LocalDate referenceDate,
+      Position position) {
     log.info("Valuating position: {}", position);
     ValuationResponse valuationResponse = getValuation(position);
     log.info("Valuation for position {}: {}", position, valuationResponse);
@@ -98,13 +157,18 @@ public class PnLService {
     ValuationKey referenceValuationKey = getReferenceValuationKey(position, referenceDate);
 
     Valuation referenceValuation = getReferenceValuation(referenceValuationKey);
-    Valuation currentValuation = Valuation.builder().book(position.getBook()).instrument(position.getInstrument()).date(eodDate)
-        .instrumentCurrencyValuation(valuationResponse.getValuationResult().getInstrumentCurrencyValuation())
-        .bookCurrencyValuation(valuationResponse.getValuationResult().getBookCurrencyValuation())
-        .valuationInput(valuationResponse.getValuationInput()).fxRate(valuationResponse.getValuationResult().getFxRate()).build();
 
-    UnRealizedPnL pnlResult = calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
-    log.info("P&L result: {}", pnlResult);
+    Valuation currentValuation = Valuation.builder().book(position.getBook())
+        .instrument(position.getInstrument()).date(eodDate)
+        .instrumentCurrencyValuation(
+            valuationResponse.getValuationResult().getInstrumentCurrencyValuation())
+        .bookCurrencyValuation(
+            valuationResponse.getValuationResult().getBookCurrencyValuation())
+        .valuationInput(valuationResponse.getValuationInput())
+        .fxRate(valuationResponse.getValuationResult().getFxRate()).build();
+
+    UnRealizedPnL pnlResult =
+        calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
     return pnlResult;
   }
 
@@ -136,23 +200,27 @@ public class PnLService {
     return valuationResponse;
   }
 
-  private void persistPnL(PnL pnlResult) {
+  private PnL persistPnL(PnL pnlResult) {
     log.info("Persisting P&L: {}", pnlResult);
-    pnlRepository.save(pnlResult);
+    return pnlRepository.save(pnlResult);
   }
 
-  private UnRealizedPnL calculatePnl(Valuation currentValuation, Valuation referenceValuation, ValuationKey valuationReferenceKey) {
+  private UnRealizedPnL calculatePnl(Valuation currentValuation, Valuation referenceValuation,
+      ValuationKey valuationReferenceKey) {
 
-    BigDecimal mtmPnL = currentValuation.getInstrumentCurrencyValuation().subtract(referenceValuation.getInstrumentCurrencyValuation());
+    BigDecimal mtmPnL = currentValuation.getInstrumentCurrencyValuation()
+        .subtract(referenceValuation.getInstrumentCurrencyValuation());
 
     BigDecimal mtmPnLFx = mtmPnL.multiply(BigDecimal.valueOf(currentValuation.getFxRate()));
 
     // fxPnl = (current valuation in base ccy * (EOD fx rate - SOD fx rate)
     BigDecimal fxPnL =
-        currentValuation.getInstrumentCurrencyValuation().multiply(BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate()));
+        currentValuation.getInstrumentCurrencyValuation().multiply(
+            BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate()));
 
     log.info("Calculated P&L {} from {}, {}", mtmPnL, currentValuation, referenceValuation);
-    return UnRealizedPnL.builder().referenceValuation(referenceValuation).currentValuation(currentValuation).mtmPnL(mtmPnL).mtmPnLFx(mtmPnLFx)
+    return UnRealizedPnL.builder().referenceValuation(referenceValuation)
+        .currentValuation(currentValuation).mtmPnL(mtmPnL).mtmPnLFx(mtmPnLFx)
         .fxPnL(fxPnL).build();
   }
 
@@ -160,7 +228,8 @@ public class PnLService {
     // Fetch reference valuation
     log.info("Fetching reference valuation for {}", valuationReferenceKey);
     Valuation result = valuationRepository
-        .findByBookAndInstrumentAndDate(valuationReferenceKey.getBook(), valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate())
+        .findByBookAndInstrumentAndDate(valuationReferenceKey.getBook(),
+            valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate())
         .get();
     log.info("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
     return result;
@@ -170,7 +239,8 @@ public class PnLService {
     return new ValuationKey(position.getInstrument(), position.getBook(), referenceDate);
   }
 
-  private ValuationInput augmentValuationInput(ValuationResponse valuationResponse, Position position) {
+  private ValuationInput augmentValuationInput(ValuationResponse valuationResponse,
+      Position position) {
     ValuationInput inputData = valuationResponse.getValuationInput();
     Set<String> missingInput = valuationResponse.getMissingInput();
 
@@ -188,7 +258,8 @@ public class PnLService {
           // double spotPrice = position.getCostBasis();
 
           // for now, move the price somewhere within +/- 10% of the cost basis for the position
-          double spotPrice = (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
+          double spotPrice =
+              (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
           inputData.addInput(input, spotPrice);
           break;
         case QTY:
@@ -229,23 +300,30 @@ public class PnLService {
   // get all instruments this book has either a position in on the eodDate, or a
   // trade after the
   // referenceDate up to the eodDate
-  private Set<String> getInstrumentsForBook(String book, LocalDate referenceDate, LocalDate eodDate) {
+  private Set<String> getInstrumentsForBook(String book, LocalDate referenceDate,
+      LocalDate eodDate) {
     // List<String> instrumentsFromTrades = tradeRepository.
     Set<String> instruments = positionRepository.findDistinctInstrumentByBookAndDate(book, eodDate);
-    instruments.addAll(tradeRepository.findDistinctInstrumentByBookAndTradeDateBetween(book, referenceDate.plusDays(1), eodDate));
+    instruments.addAll(tradeRepository.findDistinctInstrumentByBookAndTradeDateBetween(book,
+        referenceDate.plusDays(1), eodDate));
     log.info("Found {} instruments for book {}: {}", instruments.size(), book, instruments);
     return instruments;
   }
 
-  private List<Trade> getTradesForBookInstrument(String book, String instrument, LocalDate fromDate, LocalDate toDate) {
+  private List<Trade> getTradesForBookInstrument(String book, String instrument, LocalDate fromDate,
+      LocalDate toDate) {
 
-    List<Trade> trades = tradeRepository.findByBookAndInstrumentAndTradeDateBetween(book, instrument, fromDate.plusDays(1), toDate);
-    log.info("Found {} trades for book {}, instrument {} after {} through {}: {}", trades.size(), book, instrument, fromDate, toDate, trades);
+    List<Trade> trades = tradeRepository.findByBookAndInstrumentAndTradeDateBetween(book,
+        instrument, fromDate.plusDays(1), toDate);
+    log.info("Found {} trades for book {}, instrument {} after {} through {}: {}", trades.size(),
+        book, instrument, fromDate, toDate, trades);
     return trades;
   }
 
-  private List<Position> getPositionsForBookInstrument(String book, String instrument) {
-    List<Position> positions = positionRepository.findByBookAndInstrument(book, instrument);
+  private List<Position> getPositionsForBookInstrument(String book, String instrument,
+      LocalDate eodDate) {
+    List<Position> positions =
+        positionRepository.findByBookAndInstrumentAndDate(book, instrument, eodDate);
     log.info("Found {} positions for [{}, {}]: {}", positions.size(), book, instrument, positions);
     return positions;
   }
