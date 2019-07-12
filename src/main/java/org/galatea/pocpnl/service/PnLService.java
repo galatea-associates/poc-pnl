@@ -113,9 +113,9 @@ public class PnLService {
     for (Trade trade : trades) {
       log.info("Applying impact of trade {} to realized P&L", trade);
       // calculate Realized PnL
-      realizedPnl.addProceeds(trade.getValue());
-      realizedPnl.addFees(trade.getFee());
-      realizedPnl.addCommissions(trade.getCommission());
+      realizedPnl.addProceeds(-1 * trade.getValue());
+      realizedPnl.addFees(-1 * trade.getFee());
+      realizedPnl.addCommissions(-1 * trade.getCommission());
       log.info("Applied impact of trade {} to realized P&L: {}", trade, realizedPnl);
     }
     return realizedPnl;
