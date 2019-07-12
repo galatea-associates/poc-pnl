@@ -6,10 +6,31 @@
 <link
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	rel="stylesheet">
-</head>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/datatables.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	crossorigin="anonymous"></script>
+<script type="text/javascript"
+	src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/datatables.min.js"></script>
 <body>
 
-	<table class="table">
+	<div class="btn-group">
+		<button type="button" class="btn btn-outline-secondary toggle-vis">
+			<a class="toggle-vis" data-column="0">Book</a>
+		</button>
+		<button type="button" class="btn btn-outline-secondary toggle-vis">
+			<a class="toggle-vis" data-column="1">Instrument</a>
+		</button>
+		<button type="button" class="btn btn-outline-secondary toggle-vis">
+			<a class="toggle-vis" data-column="2">Cost Basis</a>
+		</button>
+		<button type="button" class="btn btn-outline-secondary toggle-vis">
+			<a class="toggle-vis" data-column="3">Qty</a>
+		</button>
+	</div>
+    <div>
+	<table class="table display" id="table_id">
 		<thead>
 			<tr>
 				<th scope="col">Book</th>
@@ -28,6 +49,28 @@
 
 		</tbody>
 	</table>
+	</div>
+	<script>
+		$(document).ready(function() {
+			var table = $('#table_id').DataTable({
+				"scrollY" : "200px",
+				"paging" : false,
+				"colReorder": true
+			});
 
+			$('a.toggle-vis').on('click', function(e) {
+				e.preventDefault();
+
+				// Get the column API object
+				var column = table.column($(this).attr('data-column'));
+
+				// Toggle the visibility
+				column.visible(!column.visible());
+			});
+		});
+		
+		
+		
+	</script>
 </body>
 </html>
