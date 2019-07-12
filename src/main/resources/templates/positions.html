@@ -12,6 +12,7 @@
 	<table class="table">
 		<thead>
 			<tr>
+				<th scope="col">Date</th>
 				<th scope="col">Book</th>
 				<th scope="col">Instrument</th>
 				<th scope="col">Cost Basis</th>
@@ -20,6 +21,7 @@
 		</thead>
 		<tbody>
 			<tr th:each="position: ${positions}" scope="row">
+				<td th:text="${position.date}" />
 				<td th:text="${position.book}" />
 				<td th:text="${position.instrument}" />
 				<td th:text="${position.costBasis}" />
