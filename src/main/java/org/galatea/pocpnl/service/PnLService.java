@@ -7,14 +7,12 @@ import java.util.Optional;
 import java.util.Set;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.galatea.pocpnl.domain.LTDPnL;
 import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.RealizedPnl;
 import org.galatea.pocpnl.domain.Trade;
 import org.galatea.pocpnl.domain.UnRealizedPnL;
 import org.galatea.pocpnl.domain.Valuation;
-import org.galatea.pocpnl.repository.LTDPnLRepository;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.TradeRepository;
@@ -51,9 +49,6 @@ public class PnLService {
   private PnLRepository pnlRepository;
 
   @Autowired
-  private LTDPnLRepository ltdPnlRepository;
-
-  @Autowired
   private TradeRepository tradeRepository;
 
   @Transactional
@@ -75,8 +70,7 @@ public class PnLService {
       for (String instrument : instruments) {
         log.info("Calculating P&L for [{}, {}]", book, instrument);
         PnL eodPnL = calculatePnL(eodDate, referenceDate, book, instrument);
-        eodPnL = persistPnL(eodPnL);
-        LTDPnL ltdPnL = calculateLTDPnl(book, instrument, eodDate, eodPnL);
+        PnL ltdPnL = calculateLTDPnl(book, instrument, eodDate, eodPnL);
         persistPnL(ltdPnL);
       }
     }
@@ -84,23 +78,17 @@ public class PnLService {
     log.info("PnL Calculation completed");
   }
 
-  private void persistPnL(LTDPnL ltdPnL) {
-    ltdPnlRepository.save(ltdPnL);
-  }
+  private PnL calculateLTDPnl(String book, String instrument, LocalDate eodDate, PnL eODPnL) {
 
-  private LTDPnL calculateLTDPnl(String book, String instrument, LocalDate eodDate, PnL EODPnL) {
+    UnRealizedPnL unRealizedPnL = eODPnL.getUnrealizedPnL();
+    unRealizedPnL.addLtdMtmPnL(unRealizedPnL.getMtmPnL());
+    unRealizedPnL.addLtdMtmPnLFx(unRealizedPnL.getMtmPnLFx());
+    unRealizedPnL.addLtdFxPnL(unRealizedPnL.getFxPnL());
 
-    UnRealizedPnL currentUnRealizedPnL = EODPnL.getUnrealizedPnL();
-    UnRealizedPnL ltdUnRealizedPnL = new UnRealizedPnL();
-    ltdUnRealizedPnL.addMtmPnL(currentUnRealizedPnL.getMtmPnL());
-    ltdUnRealizedPnL.addMtmPnLFx(currentUnRealizedPnL.getMtmPnLFx());
-    ltdUnRealizedPnL.addFxPnL(currentUnRealizedPnL.getFxPnL());
-
-    RealizedPnl currentRealizedPnL = EODPnL.getRealizedPnL();
-    RealizedPnl ltdRealizedPnL = new RealizedPnl();
-    ltdRealizedPnL.addCommissions(currentRealizedPnL.getCommissions());
-    ltdRealizedPnL.addFees(currentRealizedPnL.getFees());
-    ltdRealizedPnL.addProceeds(currentRealizedPnL.getProceeds());
+    RealizedPnl realizedPnL = eODPnL.getRealizedPnL();
+    realizedPnL.addLtdCommissions(realizedPnL.getCommissions());
+    realizedPnL.addLtdFees(realizedPnL.getFees());
+    realizedPnL.addLtdProceeds(realizedPnL.getProceeds());
 
     // Get previous PNL
     LocalDate referenceDate = getReferenceDate(eodDate);
@@ -109,23 +97,19 @@ public class PnLService {
 
     if (previousPnl.isPresent()) {
       UnRealizedPnL previousUnRealizedPnL = previousPnl.get().getUnrealizedPnL();
-      ltdUnRealizedPnL.addMtmPnL(previousUnRealizedPnL.getMtmPnL());
-      ltdUnRealizedPnL.addMtmPnLFx(previousUnRealizedPnL.getMtmPnLFx());
-      ltdUnRealizedPnL.addFxPnL(previousUnRealizedPnL.getFxPnL());
-
+      unRealizedPnL.addLtdMtmPnL(previousUnRealizedPnL.getLtdMtmPnL());
+      unRealizedPnL.addLtdMtmPnLFx(previousUnRealizedPnL.getLtdMtmPnLFx());
+      unRealizedPnL.addLtdMtmPnLFx(previousUnRealizedPnL.getLtdFxPnL());
 
       RealizedPnl previousRealizedPnL = previousPnl.get().getRealizedPnL();
-      ltdRealizedPnL.addCommissions(previousRealizedPnL.getCommissions());
-      ltdRealizedPnL.addFees(previousRealizedPnL.getFees());
-      ltdRealizedPnL.addProceeds(previousRealizedPnL.getProceeds());
+      realizedPnL.addLtdCommissions(previousRealizedPnL.getLtdCommissions());
+      realizedPnL.addLtdFees(previousRealizedPnL.getLtdFees());
+      realizedPnL.addLtdProceeds(previousRealizedPnL.getLtdProceeds());
     } else {
       log.warn("Could not found P&L for [{}, {}]: {}", book, instrument, referenceDate);
     }
 
-    LTDPnL ltdPnL = LTDPnL.builder().book(book).instrument(instrument).date(eodDate)
-        .ltdUnrealizedPnL(ltdUnRealizedPnL).ltdRealizedPnL(ltdRealizedPnL).build();
-    log.info("Calculated LTD P&L for [{}, {}]: {}", book, instrument, ltdPnL);
-    return ltdPnL;
+    return eODPnL;
   }
 
   private PnL calculatePnL(LocalDate eodDate, LocalDate referenceDate, String book,

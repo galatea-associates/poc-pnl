@@ -27,23 +27,30 @@ public class UnRealizedPnL {
   private Valuation currentValuation;
 
   @Default
-  private BigDecimal mtmPnL = new BigDecimal(0);;
+  private BigDecimal mtmPnL = new BigDecimal(0);
   @Default
-  private BigDecimal mtmPnLFx = new BigDecimal(0);;
+  private BigDecimal mtmPnLFx = new BigDecimal(0);
   @Default
-  private BigDecimal fxPnL = new BigDecimal(0);;
+  private BigDecimal fxPnL = new BigDecimal(0);
+
+  @Default
+  private BigDecimal ltdMtmPnL = new BigDecimal(0);;
+  @Default
+  private BigDecimal ltdMtmPnLFx = new BigDecimal(0);;
+  @Default
+  private BigDecimal ltdFxPnL = new BigDecimal(0);;
 
 
-  public void addMtmPnL(BigDecimal mtmPnl) {
-    this.mtmPnL = this.mtmPnL.add(mtmPnl);
+  public void addLtdMtmPnL(BigDecimal mtmPnl) {
+    this.ltdMtmPnL = this.ltdMtmPnL.add(mtmPnl);
   }
 
-  public void addMtmPnLFx(BigDecimal mtmPnLFx) {
-    this.mtmPnLFx = this.mtmPnLFx.add(mtmPnLFx);
+  public void addLtdMtmPnLFx(BigDecimal mtmPnLFx) {
+    this.ltdMtmPnLFx = this.ltdMtmPnLFx.add(mtmPnLFx);
   }
 
-  public void addFxPnL(BigDecimal fxPnL) {
-    this.fxPnL = this.fxPnL.add(fxPnL);
+  public void addLtdFxPnL(BigDecimal fxPnL) {
+    this.ltdFxPnL = this.ltdFxPnL.add(fxPnL);
   }
 
 
