@@ -55,7 +55,7 @@ public class DataImportService {
   private String booksFile = "data/books.txt";
   private String ratesFile = "data/rates.txt";
 
-  private Gson g = new Gson();
+  private Gson gson = new Gson();
 
 
 
@@ -68,8 +68,6 @@ public class DataImportService {
     importData(valuationRepository, getLines(valuationsFile), Valuation.class);
     importData(tradeRepository, getLines(tradesFile), Trade.class);
     importData(fxRepository, getLines(ratesFile), FxRate.class);
-
-
   }
 
   private List<String> getLines(String path) {
@@ -94,7 +92,7 @@ public class DataImportService {
   private <T> void importData(JpaRepository<T, ?> repository, List<String> lines,
       Class<T> objClass) {
     for (String json : lines) {
-      repository.save(g.fromJson(json, objClass));
+      repository.save(gson.fromJson(json, objClass));
     }
   }
 }
