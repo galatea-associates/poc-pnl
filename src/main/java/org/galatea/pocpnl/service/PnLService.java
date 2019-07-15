@@ -28,8 +28,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PnLService {
 
-  private static final String BOOK = "Position.Book";
-  private static final String INSTRUMENT = "Position.Instrument";
   private static final String QTY = "Position.Quantity";
   private static final String PRICE = "Instrument.Price";
   private static final String BOOK_CURRENCY = "Book.Currency";
@@ -50,6 +48,15 @@ public class PnLService {
 
   @Autowired
   private TradeRepository tradeRepository;
+
+  @Autowired
+  private InstrumentService instrumentService;
+
+  @Autowired
+  private FxService fxService;
+
+  @Autowired
+  private BookService bookService;
 
   @Transactional
   public void calculateEODPnL(LocalDate eodDate) {
@@ -233,25 +240,34 @@ public class PnLService {
       switch (input) {
         case PRICE:
           // TODO: lookup price for this instrument
-          // double spotPrice = position.getCostBasis();
+          double spotPrice = instrumentService.getInstrumentPrice(position.getInstrument());
 
           // for now, move the price somewhere within +/- 10% of the cost basis for the position
-          double spotPrice = position.getCostBasis();
-          // (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
+          // double spotPrice = (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) /
+          // 100d;
           inputData.addInput(input, spotPrice);
           break;
         case QTY:
           inputData.addInput(input, position.getQty());
           break;
         case INSTRUMENT_CURRENCY:
-          inputData.addInput(input, position.getInstrument().endsWith("HK") ? "HKD" : "USD");
+          // inputData.addInput(input, position.getInstrument().endsWith("HK") ? "HKD" : "USD");
+          String instrumentCurrency =
+              instrumentService.getInstrumentCurrency(position.getInstrument());
+          inputData.addInput(input, instrumentCurrency);
           break;
         case BOOK_CURRENCY:
-          inputData.addInput(input, "USD");
+          String bookCurrency = bookService.getBookCurrency(position.getBook());
+          inputData.addInput(input, bookCurrency);
+          // inputData.addInput(input, "USD");
           break;
         case FX_RATE:
+          String from = (String) inputData.get(INSTRUMENT_CURRENCY);
+          String to = (String) inputData.get(BOOK_CURRENCY);
+          double rate = fxService.getRate(from, to);
+          inputData.addInput(input, rate);
           // assume if we're asked, we're looking for HKD->USD
-          inputData.addInput(input, 0.1275);
+          // inputData.addInput(input, 0.1275);
           break;
         default:
           // TODO: handle this error.

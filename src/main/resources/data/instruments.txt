@@ -1,0 +1,3 @@
+{ "instrumentId": "TSLA", "spotPrice": 234.30, "currency": "USD" }
+{ "instrumentId": "0005.HK", "spotPrice": 68.10, "currency": "HKD"}
+{ "instrumentId": "IBM", "spotPrice": 140, "currency": "USD"}

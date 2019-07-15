@@ -10,10 +10,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.pocpnl.domain.Book;
+import org.galatea.pocpnl.domain.FxRate;
+import org.galatea.pocpnl.domain.Instrument;
 import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.Trade;
 import org.galatea.pocpnl.domain.Valuation;
+import org.galatea.pocpnl.repository.BookRepository;
+import org.galatea.pocpnl.repository.FxRepository;
+import org.galatea.pocpnl.repository.InstrumentRepository;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.TradeRepository;
@@ -35,6 +41,12 @@ public class PocPnlApplicationTests {
   Gson gson = new Gson();
 
   @Autowired
+  private BookRepository bookRepository;
+
+  @Autowired
+  private InstrumentRepository instrumentRepository;
+
+  @Autowired
   private PositionRepository positionRepository;
 
   @Autowired
@@ -44,28 +56,27 @@ public class PocPnlApplicationTests {
   private TradeRepository tradeRepository;
 
   @Autowired
+  private FxRepository fxRepository;
+
+  @Autowired
   private PnLRepository pnlRepository;
 
   @Autowired
   private PnLService pnlService;
 
-  public void before() {
-    log.info("Positions {}", positionRepository.count());
-    log.info("Valuations {}", valuationRepository.count());
-    log.info("P&Ls {}", pnlRepository.count());
-  }
-
   @Test
   public void test1() throws FileNotFoundException, IOException {
-    before();
     runScenario(loadScenario("scenario1.json"));
   }
 
   private void runScenario(TestScenario scenario) {
     log.info("Testing {}", scenario.getName());
+    loadBooks(scenario.getBooks());
+    loadInstruments(scenario.getInstruments());
     loadPositions(scenario.getPositions());
     loadValuations(scenario.getValuations());
     loadTraders(scenario.getTrades());
+    loadFxRates(scenario.getFxRates());
     pnlService.calculateEODPnL(scenario.getEod());
 
     assertResults(scenario.getExpectedPnl());
@@ -80,6 +91,15 @@ public class PocPnlApplicationTests {
     }
   }
 
+  private void loadBooks(List<Book> books) {
+    bookRepository.saveAll(books);
+    log.info("Loaded {} Books {}", books.size(), books);
+  }
+
+  private void loadInstruments(List<Instrument> instruments) {
+    instrumentRepository.saveAll(instruments);
+    log.info("Loaded {} Instruments {}", instruments.size(), instruments);
+  }
 
   private void loadPositions(List<Position> positions) {
     positionRepository.saveAll(positions);
@@ -94,6 +114,11 @@ public class PocPnlApplicationTests {
   private void loadTraders(List<Trade> trades) {
     tradeRepository.saveAll(trades);
     log.info("Loaded {} Trades {}", trades.size(), trades);
+  }
+
+  private void loadFxRates(List<FxRate> fxRates) {
+    fxRepository.saveAll(fxRates);
+    log.info("Loaded {} Fx Rates {}", fxRates.size(), fxRates);
   }
 
   private TestScenario loadScenario(String testFile) throws FileNotFoundException, IOException {

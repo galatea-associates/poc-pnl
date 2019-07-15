@@ -8,15 +8,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.pocpnl.domain.Book;
+import org.galatea.pocpnl.domain.FxRate;
+import org.galatea.pocpnl.domain.Instrument;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.Trade;
 import org.galatea.pocpnl.domain.Valuation;
+import org.galatea.pocpnl.repository.BookRepository;
+import org.galatea.pocpnl.repository.FxRepository;
+import org.galatea.pocpnl.repository.InstrumentRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.TradeRepository;
 import org.galatea.pocpnl.repository.ValuationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -32,17 +39,36 @@ public class DataImportService {
   @Autowired
   private TradeRepository tradeRepository;
 
+  @Autowired
+  private FxRepository fxRepository;
+
+  @Autowired
+  private InstrumentRepository instrumentRepository;
+
+  @Autowired
+  private BookRepository bookRepository;
+
   private String positionsFile = "data/positions.txt";
   private String valuationsFile = "data/valuations.txt";
   private String tradesFile = "data/trades.txt";
+  private String instrumentsFile = "data/instruments.txt";
+  private String booksFile = "data/books.txt";
+  private String ratesFile = "data/rates.txt";
 
   private Gson g = new Gson();
 
+
+
   public void importData() {
     log.info("Importing data");
-    importPositions(getLines(positionsFile));
-    importValuations(getLines(valuationsFile));
-    importTrades(getLines(tradesFile));
+
+    importData(bookRepository, getLines(booksFile), Book.class);
+    importData(instrumentRepository, getLines(instrumentsFile), Instrument.class);
+    importData(positionRepository, getLines(positionsFile), Position.class);
+    importData(valuationRepository, getLines(valuationsFile), Valuation.class);
+    importData(tradeRepository, getLines(tradesFile), Trade.class);
+    importData(fxRepository, getLines(ratesFile), FxRate.class);
+
 
   }
 
@@ -65,25 +91,10 @@ public class DataImportService {
     return lines;
   }
 
-  private void importPositions(List<String> lines) {
+  private <T> void importData(JpaRepository<T, ?> repository, List<String> lines,
+      Class<T> objClass) {
     for (String json : lines) {
-      Position position = g.fromJson(json, Position.class);
-      positionRepository.save(position);
+      repository.save(g.fromJson(json, objClass));
     }
   }
-
-  private void importValuations(List<String> lines) {
-    for (String json : lines) {
-      Valuation valuation = g.fromJson(json, Valuation.class);
-      valuationRepository.save(valuation);
-    }
-  }
-
-  private void importTrades(List<String> lines) {
-    for (String json : lines) {
-      Trade valuation = g.fromJson(json, Trade.class);
-      tradeRepository.save(valuation);
-    }
-  }
-
 }
