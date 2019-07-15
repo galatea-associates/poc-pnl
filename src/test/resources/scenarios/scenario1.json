@@ -116,8 +116,8 @@
 	],
 	"fxRates": [
 		{
-			"fromCurrency": "HKD", 
-			"toCurrency": "USD", 
+			"fromCurrency": "HKD",
+			"toCurrency": "USD",
 			"rate": 0.1275
 		}
 	],

@@ -30,12 +30,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class PocPnlApplicationTests {
 
   Gson gson = new Gson();
@@ -74,8 +77,13 @@ public class PocPnlApplicationTests {
     runScenario(loadScenario("priceMove.json"));
   }
 
+  @Test
+  public void saleTest() throws FileNotFoundException, IOException {
+    runScenario(loadScenario("sale.json"));
+  }
+
   private void runScenario(TestScenario scenario) {
-    log.info("Testing {}", scenario.getName());
+    log.info("TEST: {}", scenario.getName());
     loadBooks(scenario.getBooks());
     loadInstruments(scenario.getInstruments());
     loadPositions(scenario.getPositions());
