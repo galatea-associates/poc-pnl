@@ -2,14 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title th:text="'Positions'"></title>
+<title th:text="'P&L'"></title>
 <link
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	rel="stylesheet">
 <link rel="stylesheet" type="text/css"
 	href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/datatables.min.css" />
-
-
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.js"
@@ -21,7 +19,12 @@
 <body>
 
 
-	<div class="container">
+	<div class="container" style="max-width: 90%">
+		<div id="table_id_filter" class="col col-lg-10">
+			<input id="myInput" type="search"
+				class="form-control "
+				placeholder="Search" aria-controls="table_id">
+		</div>
 		<table class="table" id="table_id">
 			<thead>
 				<tr>
@@ -79,7 +82,7 @@
 					<td
 						th:text='${result.unrealizedPnL.currentValuation.valuationInput.get("Book.Currency")} + ${result.unrealizedPnL.ltdMtmPnLFx}' />
 					<td th:text="${result.unrealizedPnL.ltdFxPnL}" />
-					
+
 				</tr>
 
 			</tbody>
@@ -93,7 +96,8 @@
 				"paging" : false,
 				"colReorder" : true,
 				"stateSave" : true,
-				"dom" : '<"form-group"B><"form-group "f>tp',
+				"searching" : true,
+				"dom" : '<"#top.row"<"col col-lg-2" B>><t><ip>',
 				"columnDefs" : [ {
 					targets : 1,
 					className : 'noVis'
@@ -104,6 +108,13 @@
 				} ]
 
 			});
+
+			// #myInput is a <input type="text"> element
+			$('#myInput').on('keyup', function() {
+				table.search(this.value).draw();
+			});
+			
+			document.getElementById('top').prepend(document.getElementById('table_id_filter'))
 		});
 	</script>
 </body>
