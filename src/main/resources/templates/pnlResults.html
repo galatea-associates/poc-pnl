@@ -16,16 +16,22 @@
 
 <script type="text/javascript"
 	src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/cr-1.5.0/datatables.min.js"></script>
+
+
+<style>
+.btn-group {
+	width: 100%
+}
+</style>
 <body>
 
 
 	<div class="container" style="max-width: 90%">
 		<div id="table_id_filter" class="col col-lg-10">
-			<input id="myInput" type="search"
-				class="form-control "
-				placeholder="Search" aria-controls="table_id">
+			<input id="myInput" type="search" class="form-control "
+				placeholder="Search..." aria-controls="table_id">
 		</div>
-		<table class="table" id="table_id">
+		<table class="table table-responsive" id="table_id">
 			<thead>
 				<tr>
 					<th scope="col">Date</th>
@@ -89,33 +95,35 @@
 		</table>
 	</div>
 	<script>
-		$(document).ready(function() {
-			var table = $('#table_id').DataTable({
-				"scrollY" : "100%",
-				"scrollX" : "100%",
-				"paging" : false,
-				"colReorder" : true,
-				"stateSave" : true,
-				"searching" : true,
-				"dom" : '<"#top.row"<"col col-lg-2" B>><t><ip>',
-				"columnDefs" : [ {
-					targets : 1,
-					className : 'noVis'
-				} ],
-				buttons : [ {
-					extend : 'colvis',
-					columns : ':not(.noVis)'
-				} ]
+		$(document).ready(
+				function() {
+					var table = $('#table_id').DataTable({
+						"scrollY" : "100%",
+						"scrollX" : "100%",
+						"paging" : false,
+						"colReorder" : true,
+						"stateSave" : true,
+						"searching" : true,
+						"dom" : '<"#top.row"<"col col-lg-2" B>><t><ip>',
+						"columnDefs" : [ {
+							targets : 1,
+							className : 'noVis'
+						} ],
+						buttons : [ {
+							extend : 'colvis',
+							columns : ':not(.noVis)'
+						} ]
 
-			});
+					});
 
-			// #myInput is a <input type="text"> element
-			$('#myInput').on('keyup', function() {
-				table.search(this.value).draw();
-			});
-			
-			document.getElementById('top').prepend(document.getElementById('table_id_filter'))
-		});
+					// #myInput is a <input type="text"> element
+					$('#myInput').on('keyup', function() {
+						table.search(this.value).draw();
+					});
+
+					document.getElementById('top').prepend(
+							document.getElementById('table_id_filter'))
+				});
 	</script>
 </body>
 </html>
