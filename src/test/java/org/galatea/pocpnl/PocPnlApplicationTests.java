@@ -82,6 +82,11 @@ public class PocPnlApplicationTests {
     runScenario(loadScenario("sale.json"));
   }
 
+  @Test
+  public void purchaseAndPriceMoveTest() throws FileNotFoundException, IOException {
+    runScenario(loadScenario("purchaseAndPriceMove.json"));
+  }
+
   private void runScenario(TestScenario scenario) {
     log.info("TEST: {}", scenario.getName());
     loadBooks(scenario.getBooks());

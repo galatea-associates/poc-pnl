@@ -1,5 +1,5 @@
 {
-	"name": "Sale",
+	"name": "Price Move",
 	"eod": {
 		"year": 2019,
 		"month": 7,
@@ -13,17 +13,17 @@
 	],
 	"instruments": [
 		{
-			"instrumentId": "DNKN",
-			"spotPrice": 74.00,
+			"instrumentId": "TSLA",
+			"spotPrice": 75.00,
 			"currency": "USD"
 		}
 	],
 	"positions": [
 		{
 			"book": "EQTY1",
-			"instrument": "DNKN",
+			"instrument": "TSLA",
 			"qty": 500,
-			"costBasis": 79.00,
+			"costBasis": 70.03,
 			"date": {
 				"year": 2019,
 				"month": 7,
@@ -32,9 +32,9 @@
 		},
 		{
 			"book": "EQTY1",
-			"instrument": "DNKN",
-			"qty": 300,
-			"costBasis": 79.00,
+			"instrument": "TSLA",
+			"qty": 525,
+			"costBasis": 70.03,
 			"date": {
 				"year": 2019,
 				"month": 7,
@@ -45,18 +45,18 @@
 	"valuations": [
 		{
 			"book": "EQTY1",
-			"instrument": "DNKN",
+			"instrument": "TSLA",
 			"date": {
 				"year": 2019,
 				"month": 7,
 				"day": 09
 			},
-			"instrumentCurrencyValuation": 37500.00,
+			"instrumentCurrencyValuation": 36000.00,
 			"fxRate": 1.0,
-			"bookCurrencyValuation": 37500.00,
+			"bookCurrencyValuation": 36000.00,
 			"valuationInput": {
 				"numericInputData": {
-					"Instrument.Price": 75.00,
+					"Instrument.Price": 72.00,
 					"Position.Quantity": 500
 				},
 				"textInputData": {
@@ -69,7 +69,7 @@
 	"trades": [
 		{
 			"book": "EQTY1",
-			"instrument": "DNKN",
+			"instrument": "TSLA",
 			"tradeDate": {
 				"year": 2019,
 				"month": 7,
@@ -80,10 +80,10 @@
 				"month": 7,
 				"day": 12
 			},
-			"quantity": -200,
-			"price": 74.81,
-			"fee": 2.12,
-			"commission": 0.81,
+			"quantity": 25,
+			"price": 71.36,
+			"fee": 2.01,
+			"commission": 0.73,
 			"currency": "USD"
 		}
 	],
@@ -91,7 +91,7 @@
 	"expectedPnl": [
 		{
 			"book": "EQTY1",
-			"instrument": "DNKN",
+			"instrument": "TSLA",
 			"date": {
 				"year": 2019,
 				"month": 7,
@@ -101,19 +101,19 @@
 				"referenceValuation": {
 					"id": 1,
 					"book": "EQTY1",
-					"instrument": "DNKN",
+					"instrument": "TSLA",
 					"date": {
 						"year": 2019,
 						"month": 7,
 						"day": 9
 					},
-					"instrumentCurrencyValuation": 37500.00,
-					"bookCurrencyValuation": 37500.00,
+					"instrumentCurrencyValuation": 36000.00,
+					"bookCurrencyValuation": 36000.00,
 					"fxRate": 1.0,
 					"valuationInput": {
 						"id": 1,
 						"numericInputData": {
-							"Instrument.Price": 75.00,
+							"Instrument.Price": 72.00,
 							"Position.Quantity": 500
 						},
 						"textInputData": {
@@ -125,20 +125,20 @@
 				"currentValuation": {
 					"id": 2,
 					"book": "EQTY1",
-					"instrument": "DNKN",
+					"instrument": "TSLA",
 					"date": {
 						"year": 2019,
 						"month": 7,
 						"day": 10
 					},
-					"instrumentCurrencyValuation": 22200.00,
-					"bookCurrencyValuation": 22200.00,
+					"instrumentCurrencyValuation": 39375.00,
+					"bookCurrencyValuation": 39375.00,
 					"fxRate": 1.0,
 					"valuationInput": {
 						"id": 2,
 						"numericInputData": {
-							"Instrument.Price": 74.0,
-							"Position.Quantity": 300
+							"Instrument.Price": 75.0,
+							"Position.Quantity": 525
 						},
 						"textInputData": {
 							"Instrument.Currency": "USD",
@@ -146,20 +146,20 @@
 						}
 					}
 				},
-				"mtmPnL": -15300.00,
-				"mtmPnLFx": -15300.00,
+				"mtmPnL": 3375.00,
+				"mtmPnLFx": 3375.00,
 				"fxPnL": 0.00,
-				"ltdMtmPnL": -15300.00,
-				"ltdMtmPnLFx": -15300.00,
+				"ltdMtmPnL": 3375.00,
+				"ltdMtmPnLFx": 3375.00,
 				"ltdFxPnL": 0.00
 			},
 			"realizedPnL": {
-				"proceeds": 14962.00,
-				"fees": -2.12,
-				"commissions": -0.81,
-				"ltdProceeds": 14962.00,
-				"ltdFees": -2.12,
-				"ltdCommissions": -0.81
+				"proceeds": -1784.00,
+				"fees": -2.01,
+				"commissions": -0.73,
+				"ltdProceeds": -1784.00,
+				"ltdFees": -2.01,
+				"ltdCommissions": -0.73
 			}
 		}
 	]
