@@ -174,7 +174,7 @@ public class PnLService {
 
     ValuationResponse valuationResponse = valuationService.value(valuationInput);
     while (valuationResponse.isMoreDataNeeded()) {
-      log.info("More data needed for valuating position: {}, {}", position, valuationResponse);
+      log.debug("More data needed for valuating position: {}, {}", position, valuationResponse);
       // get more data and revalue..
       valuationInput = augmentValuationInput(valuationResponse, position);
 
@@ -185,7 +185,7 @@ public class PnLService {
   }
 
   private PnL persistPnL(PnL pnlResult) {
-    log.info("Persisting P&L: {}", pnlResult);
+    log.debug("Persisting P&L: {}", pnlResult);
     return pnlRepository.save(pnlResult);
   }
 
@@ -210,12 +210,12 @@ public class PnLService {
 
   private Valuation getReferenceValuation(ValuationKey valuationReferenceKey) {
     // Fetch reference valuation
-    log.info("Fetching reference valuation for {}", valuationReferenceKey);
+    log.debug("Fetching reference valuation for {}", valuationReferenceKey);
     Valuation result = valuationRepository
         .findByBookAndInstrumentAndDate(valuationReferenceKey.getBook(),
             valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate())
         .get();
-    log.info("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
+    log.debug("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
     return result;
   }
 
@@ -231,19 +231,13 @@ public class PnLService {
     for (String input : missingInput) {
       log.debug("Including position {} to ValuationInput data {}", input, inputData);
       switch (input) {
-        case BOOK:
-          inputData.addInput(input, position.getBook());
-          break;
-        case INSTRUMENT:
-          inputData.addInput(input, position.getInstrument());
-          break;
         case PRICE:
           // TODO: lookup price for this instrument
           // double spotPrice = position.getCostBasis();
 
           // for now, move the price somewhere within +/- 10% of the cost basis for the position
-          double spotPrice =
-              (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
+          double spotPrice = position.getCostBasis();
+          // (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) / 100d;
           inputData.addInput(input, spotPrice);
           break;
         case QTY:
@@ -267,7 +261,7 @@ public class PnLService {
       log.debug("Included position {} to ValuationInput data {}", input, inputData);
     }
 
-    log.info("Augmented ValuationInput: {}", inputData);
+    log.debug("Augmented ValuationInput: {}", inputData);
     return inputData;
   }
 

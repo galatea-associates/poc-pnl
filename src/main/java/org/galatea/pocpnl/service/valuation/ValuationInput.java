@@ -7,6 +7,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,13 +24,13 @@ public class ValuationInput {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "value", length = 1000)
   @CollectionTable(name = "numeric_input_data",
       joinColumns = @JoinColumn(name = "valuation_input_id"))
   private Map<String, Number> numericInputData;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "value", length = 1000)
   @CollectionTable(name = "text_input_data", joinColumns = @JoinColumn(name = "valuation_input_id"))
   private Map<String, String> textInputData;

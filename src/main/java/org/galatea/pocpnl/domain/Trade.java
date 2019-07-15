@@ -3,6 +3,8 @@ package org.galatea.pocpnl.domain;
 
 import java.time.LocalDate;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -16,8 +18,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class Trade {
 
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
   String id;
+
   String book;
   String instrument;
   LocalDate tradeDate;

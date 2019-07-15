@@ -1,0 +1,248 @@
+{
+	"name": "Test Scenario 1",
+	"eod": {
+		"year": 2019,
+		"month": 7,
+		"day": 10
+	},
+	"positions": [
+		{
+			"book": "EQTY1",
+			"instrument": "TSLA",
+			"qty": 1000,
+			"costBasis": 234.30,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"qty": 1000,
+			"costBasis": 68.10,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		}
+	],
+	"valuations": [
+		{
+			"book": "EQTY1",
+			"instrument": "TSLA",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			},
+			"instrumentCurrencyValuation": 114485,
+			"fxRate": 1.0,
+			"bookCurrencyValuation": 114485,
+			"valuationInput": {
+				"numericInputData": {
+					"Instrument.Price": 228.97,
+					"Position.Quantity": 500
+				},
+				"textInputData": {
+					"Instrument.Currency": "USD",
+					"Book.Currency": "USD"
+				}
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			},
+			"instrumentCurrencyValuation": 65300,
+			"fxRate": 0.1285,
+			"bookCurrencyValuation": 8391.05,
+			"valuationInput": {
+				"numericInputData": {
+					"Instrument.Price": 65.30,
+					"Position.Quantity": 1000
+				},
+				"textInputData": {
+					"Instrument.Currency": "HKD",
+					"Book.Currency": "USD"
+				}
+			}
+		}
+	],
+	"trades": [
+		{
+			"book": "EQTY1",
+			"instrument": "TSLA",
+			"tradeDate": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"settlementDate": {
+				"year": 2019,
+				"month": 7,
+				"day": 12
+			},
+			"quantity": 500,
+			"price": 229.31,
+			"fee": 0.03,
+			"commission": 1.00,
+			"currency": "USD"
+		}
+	],
+	"expectedPnl": [
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"referenceValuation": {
+					"id": 2,
+					"book": "EQTY1",
+					"instrument": "0005.HK",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 9
+					},
+					"instrumentCurrencyValuation": 65300.00,
+					"bookCurrencyValuation": 8391.05,
+					"fxRate": 0.1285,
+					"valuationInput": {
+						"id": 2,
+						"numericInputData": {
+							"Instrument.Price": 65.30,
+							"Position.Quantity": 1000
+						},
+						"textInputData": {
+							"Instrument.Currency": "HKD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"currentValuation": {
+					"id": 3,
+					"book": "EQTY1",
+					"instrument": "0005.HK",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 68100.00,
+					"bookCurrencyValuation": 8682.75,
+					"fxRate": 0.1275,
+					"valuationInput": {
+						"id": 3,
+						"numericInputData": {
+							"FX.Rate": 0.1275,
+							"Instrument.Price": 68.1,
+							"Position.Quantity": 1000
+						},
+						"textInputData": {
+							"Instrument.Currency": "HKD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": 2800.00,
+				"mtmPnLFx": 357.00,
+				"fxPnL": -68.10,
+				"ltdMtmPnL": 2800.00,
+				"ltdMtmPnLFx": 357.00,
+				"ltdFxPnL": -68.10
+			},
+			"realizedPnL": {
+				"proceeds": 0.00,
+				"fees": 0.00,
+				"commissions": 0.00,
+				"ltdProceeds": 0.00,
+				"ltdFees": 0.00,
+				"ltdCommissions": 0.00
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "TSLA",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"referenceValuation": {
+					"id": 1,
+					"book": "EQTY1",
+					"instrument": "TSLA",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 9
+					},
+					"instrumentCurrencyValuation": 114485.00,
+					"bookCurrencyValuation": 114485.00,
+					"fxRate": 1.0,
+					"valuationInput": {
+						"id": 1,
+						"numericInputData": {
+							"Instrument.Price": 228.97,
+							"Position.Quantity": 500
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"currentValuation": {
+					"id": 4,
+					"book": "EQTY1",
+					"instrument": "TSLA",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 234300.00,
+					"bookCurrencyValuation": 234300.00,
+					"fxRate": 1.0,
+					"valuationInput": {
+						"id": 4,
+						"numericInputData": {
+							"Instrument.Price": 234.3,
+							"Position.Quantity": 1000
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": 119815.00,
+				"mtmPnLFx": 119815.00,
+				"fxPnL": 0.00,
+				"ltdMtmPnL": 119815.00,
+				"ltdMtmPnLFx": 119815.00,
+				"ltdFxPnL": 0.00
+			},
+			"realizedPnL": {
+				"proceeds": -114655.00,
+				"fees": -0.03,
+				"commissions": -1.00,
+				"ltdProceeds": -114655.00,
+				"ltdFees": -0.03,
+				"ltdCommissions": -1.00
+			}
+		}
+	]
+}
