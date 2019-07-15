@@ -1,0 +1,146 @@
+{
+	"name": "Price Move",
+	"eod": {
+		"year": 2019,
+		"month": 7,
+		"day": 10
+	},
+	"books": [
+		{
+			"bookId": "EQTY1",
+			"currency": "USD"
+		}
+	],
+	"instruments": [
+		{
+			"instrumentId": "IBM",
+			"spotPrice": 106.00,
+			"currency": "USD"
+		}
+	],
+	"positions": [
+		{
+			"book": "EQTY1",
+			"instrument": "IBM",
+			"qty": 700,
+			"costBasis": 94.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "IBM",
+			"qty": 700,
+			"costBasis": 94.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		}
+	],
+	"valuations": [
+		{
+			"book": "EQTY1",
+			"instrument": "IBM",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			},
+			"instrumentCurrencyValuation": 71400,
+			"fxRate": 1.0,
+			"bookCurrencyValuation": 71400,
+			"valuationInput": {
+				"numericInputData": {
+					"Instrument.Price": 102.00,
+					"Position.Quantity": 700
+				},
+				"textInputData": {
+					"Instrument.Currency": "USD",
+					"Book.Currency": "USD"
+				}
+			}
+		}
+	],
+	"trades": [],
+	"fxRates": [],
+	"expectedPnl": [
+		{
+			"book": "EQTY1",
+			"instrument": "IBM",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"referenceValuation": {
+					"id": 1,
+					"book": "EQTY1",
+					"instrument": "IBM",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 9
+					},
+					"instrumentCurrencyValuation": 71400.00,
+					"bookCurrencyValuation": 71400.00,
+					"fxRate": 1.0,
+					"valuationInput": {
+						"id": 1,
+						"numericInputData": {
+							"Instrument.Price": 102.00,
+							"Position.Quantity": 700
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"currentValuation": {
+					"id": 2,
+					"book": "EQTY1",
+					"instrument": "IBM",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 74200.00,
+					"bookCurrencyValuation": 74200.00,
+					"fxRate": 1.0,
+					"valuationInput": {
+						"id": 2,
+						"numericInputData": {
+							"Instrument.Price": 106.0,
+							"Position.Quantity": 700
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": 2800.00,
+				"mtmPnLFx": 2800.00,
+				"fxPnL": 0.00,
+				"ltdMtmPnL": 2800.00,
+				"ltdMtmPnLFx": 2800.00,
+				"ltdFxPnL": 0.00
+			},
+			"realizedPnL": {
+				"proceeds": 0.00,
+				"fees": 0.00,
+				"commissions": 0.00,
+				"ltdProceeds": 0.00,
+				"ltdFees": 0.00,
+				"ltdCommissions": 0.00
+			}
+		}
+	]
+}
