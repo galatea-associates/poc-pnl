@@ -1,0 +1,1 @@
+{ "book": "EQTY1", "instrument": "TSLA", "tradeDate": { "year": 2019, "month": 7, "day": 10 }, "settlementDate": { "year": 2019, "month": 7, "day": 12 }, "quantity": 500, "price": 229.31, "fee": 0.03, "commission": 1.00, "currency": "USD" }
