@@ -1,0 +1,109 @@
+{
+	"name": "Open",
+	"eod": {
+		"year": 2019,
+		"month": 7,
+		"day": 10
+	},
+	"books": [
+		{
+			"bookId": "EQTY1",
+			"currency": "USD"
+		}
+	],
+	"instruments": [
+		{
+			"instrumentId": "AAPL",
+			"spotPrice": 274.00,
+			"currency": "USD"
+		}
+	],
+	"positions": [
+		{
+			"book": "EQTY1",
+			"instrument": "AAPL",
+			"qty": 100,
+			"costBasis": 274.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		}
+	],
+	"valuations": [
+	],
+	"trades": [
+		{
+			"book": "EQTY1",
+			"instrument": "AAPL",
+			"tradeDate": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"settlementDate": {
+				"year": 2019,
+				"month": 7,
+				"day": 12
+			},
+			"quantity": 100,
+			"price": 294.01,
+			"fee": 1.08,
+			"commission": 3.12,
+			"currency": "USD"
+		}
+	],
+	"fxRates": [],
+	"expectedPnl": [
+		{
+			"book": "EQTY1",
+			"instrument": "AAPL",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"currentValuation": {
+					"id": 1,
+					"book": "EQTY1",
+					"instrument": "AAPL",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 27400.00,
+					"bookCurrencyValuation": 27400.00,
+					"fxRate": 1.0,
+					"valuationInput": {
+						"id": 1,
+						"numericInputData": {
+							"Instrument.Price": 274.0,
+							"Position.Quantity": 100
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": 27400.00,
+				"mtmPnLFx": 27400.00,
+				"fxPnL": 0.00,
+				"ltdMtmPnL": 27400.00,
+				"ltdMtmPnLFx": 27400.00,
+				"ltdFxPnL": 0.00
+			},
+			"realizedPnL": {
+				"proceeds": -29401.00,
+				"fees": -1.08,
+				"commissions": -3.12,
+				"ltdProceeds": -29401.00,
+				"ltdFees": -1.08,
+				"ltdCommissions": -3.12
+			}
+		}
+	]
+}

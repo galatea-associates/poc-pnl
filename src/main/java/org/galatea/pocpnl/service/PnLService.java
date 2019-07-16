@@ -206,15 +206,15 @@ public class PnLService {
   private UnRealizedPnL calculatePnl(Valuation currentValuation, Valuation referenceValuation,
       ValuationKey valuationReferenceKey) {
 
-    BigDecimal mtmPnL = currentValuation.getInstrumentCurrencyValuation()
-        .subtract(referenceValuation.getInstrumentCurrencyValuation());
+    BigDecimal mtmPnL = referenceValuation != null ? currentValuation.getInstrumentCurrencyValuation()
+        .subtract(referenceValuation.getInstrumentCurrencyValuation()) : currentValuation.getInstrumentCurrencyValuation();
 
     BigDecimal mtmPnLFx = mtmPnL.multiply(BigDecimal.valueOf(currentValuation.getFxRate()));
 
     // fxPnl = (current valuation in base ccy * (EOD fx rate - SOD fx rate)
-    BigDecimal fxPnL =
+    BigDecimal fxPnL = referenceValuation != null ?
         currentValuation.getInstrumentCurrencyValuation().multiply(
-            BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate()));
+            BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate())) : BigDecimal.ZERO;
 
     log.info("Calculated P&L {} from {}, {}", mtmPnL, currentValuation, referenceValuation);
     return UnRealizedPnL.builder().referenceValuation(referenceValuation)
@@ -225,12 +225,13 @@ public class PnLService {
   private Valuation getReferenceValuation(ValuationKey valuationReferenceKey) {
     // Fetch reference valuation
     log.debug("Fetching reference valuation for {}", valuationReferenceKey);
-    Valuation result = valuationRepository
+    
+    Optional<Valuation> result = valuationRepository
         .findByBookAndInstrumentAndDate(valuationReferenceKey.getBook(),
-            valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate())
-        .get();
+            valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate());
     log.debug("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
-    return result;
+    
+    return result.orElse(null);
   }
 
   private ValuationKey getReferenceValuationKey(Position position, LocalDate referenceDate) {

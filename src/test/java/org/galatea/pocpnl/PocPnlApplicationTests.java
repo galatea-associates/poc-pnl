@@ -88,6 +88,11 @@ public class PocPnlApplicationTests {
   }
   
   @Test
+  public void openTest() throws FileNotFoundException, IOException {
+    runScenario(loadScenario("scenarios/open.json"));
+  }
+  
+  @Test
   public void fxMoveTest() throws FileNotFoundException, IOException {
     runScenario(loadScenario("scenarios/fxMove.json"));
   }
