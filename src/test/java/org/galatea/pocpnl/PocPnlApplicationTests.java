@@ -69,22 +69,22 @@ public class PocPnlApplicationTests {
 
   @Test
   public void test1() throws FileNotFoundException, IOException {
-    runScenario(loadScenario("scenario1.json"));
+    runScenario(loadScenario("scenarios/scenario1.json"));
   }
 
   @Test
   public void priceMoveTest() throws FileNotFoundException, IOException {
-    runScenario(loadScenario("priceMove.json"));
+    runScenario(loadScenario("scenarios/priceMove.json"));
   }
 
   @Test
   public void saleTest() throws FileNotFoundException, IOException {
-    runScenario(loadScenario("sale.json"));
+    runScenario(loadScenario("scenarios/sale.json"));
   }
 
   @Test
   public void purchaseAndPriceMoveTest() throws FileNotFoundException, IOException {
-    runScenario(loadScenario("purchaseAndPriceMove.json"));
+    runScenario(loadScenario("scenarios/purchaseAndPriceMove.json"));
   }
 
   private void runScenario(TestScenario scenario) {
