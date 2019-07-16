@@ -167,10 +167,17 @@ public class PnLService {
     RealizedPnl realizedPnl = new RealizedPnl();
     for (Trade trade : trades) {
       log.info("Applying impact of trade {} to realized P&L", trade);
+      
+      String bookCurrency = bookService.getBookCurrency(trade.getBook());
+      String instrumentCurrency =
+              instrumentService.getInstrumentCurrency(trade.getInstrument());
+      
+      double fxRate = instrumentCurrency.equals(bookCurrency) ? 1.00 : fxService.getRate(instrumentCurrency, bookCurrency);
+      
       // calculate Realized PnL
-      realizedPnl.addProceeds(-1 * trade.getValue());
-      realizedPnl.addFees(-1 * trade.getFee());
-      realizedPnl.addCommissions(-1 * trade.getCommission());
+      realizedPnl.addProceeds(-1 * trade.getValue()*fxRate);
+      realizedPnl.addFees(-1 * trade.getFee()*fxRate);
+      realizedPnl.addCommissions(-1 * trade.getCommission()*fxRate);
       log.info("Applied impact of trade {} to realized P&L: {}", trade, realizedPnl);
     }
     return realizedPnl;

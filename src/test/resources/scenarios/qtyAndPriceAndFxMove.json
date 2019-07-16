@@ -1,0 +1,175 @@
+{
+	"name": "Qty+Price+FX move",
+	"eod": {
+		"year": 2019,
+		"month": 7,
+		"day": 10
+	},
+	"books": [
+		{
+			"bookId": "EQTY1",
+			"currency": "USD"
+		}
+	],
+	"instruments": [
+		{
+			"instrumentId": "0005.HK",
+			"spotPrice": 64.85,
+			"currency": "HKD"
+		}
+	],
+	"positions": [
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"qty": 1000,
+			"costBasis": 63.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"qty": 1250,
+			"costBasis": 63.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		}
+	],
+	"valuations": [
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			},
+			"instrumentCurrencyValuation": 65400.00,
+			"fxRate": 0.12742,
+			"bookCurrencyValuation": 47933.00,
+			"valuationInput": {
+				"numericInputData": {
+					"FX.Rate": 0.12742,
+					"Instrument.Price": 65.40,
+					"Position.Quantity": 1000
+				},
+				"textInputData": {
+					"Instrument.Currency": "HKD",
+					"Book.Currency": "USD"
+				}
+			}
+		}
+	],
+	"trades": [
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"tradeDate": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"settlementDate": {
+				"year": 2019,
+				"month": 7,
+				"day": 12
+			},
+			"quantity": 250,
+			"price": 7.849,
+			"fee": 0.98,
+			"commission": 1.02,
+			"currency": "HKD"
+		}
+	],
+	"fxRates": [
+		{
+			"fromCurrency": "HKD",
+			"toCurrency": "USD",
+			"rate": 0.12740
+		}
+	],
+	"expectedPnl": [
+		{
+			"book": "EQTY1",
+			"instrument": "0005.HK",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"referenceValuation": {
+					"id": 1,
+					"book": "EQTY1",
+					"instrument": "0005.HK",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 9
+					},
+					"instrumentCurrencyValuation": 65400.00,
+					"bookCurrencyValuation": 47933.00,
+					"fxRate": 0.12742,
+					"valuationInput": {
+						"id": 1,
+						"numericInputData": {
+							"FX.Rate": 0.12742,
+							"Instrument.Price": 65.40,
+							"Position.Quantity": 1000
+						},
+						"textInputData": {
+							"Instrument.Currency": "HKD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"currentValuation": {
+					"id": 2,
+					"book": "EQTY1",
+					"instrument": "0005.HK",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 81062.50,
+					"bookCurrencyValuation": 10327.36,
+					"fxRate": 0.12740,
+					"valuationInput": {
+						"id": 2,
+						"numericInputData": {
+							"FX.Rate": 0.1274,
+							"Instrument.Price": 64.85,
+							"Position.Quantity": 1250
+						},
+						"textInputData": {
+							"Instrument.Currency": "HKD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": 15662.50,
+				"mtmPnLFx": 1995.40,
+				"fxPnL": -1.62,
+				"ltdMtmPnL": 15662.50,
+				"ltdMtmPnLFx": 1995.40,
+				"ltdFxPnL": -1.62
+			},
+			"realizedPnL": {
+				"proceeds": -249.99,
+				"fees": -0.12,
+				"commissions": -0.13,
+				"ltdProceeds": -249.99,
+				"ltdFees": -0.12,
+				"ltdCommissions": -0.13
+			}
+		}
+	]
+}
