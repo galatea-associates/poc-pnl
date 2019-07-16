@@ -1,0 +1,155 @@
+{
+	"name": "Price+FX move",
+	"eod": {
+		"year": 2019,
+		"month": 7,
+		"day": 10
+	},
+	"books": [
+		{
+			"bookId": "EQTY1",
+			"currency": "USD"
+		}
+	],
+	"instruments": [
+		{
+			"instrumentId": "005930.KR",
+			"spotPrice": 42550.00,
+			"currency": "KRW"
+		}
+	],
+	"positions": [
+		{
+			"book": "EQTY1",
+			"instrument": "005930.KR",
+			"qty": 4000,
+			"costBasis": 41900.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "005930.KR",
+			"qty": 4000,
+			"costBasis": 41900.00,
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		}
+	],
+	"valuations": [
+		{
+			"book": "EQTY1",
+			"instrument": "005930.KR",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			},
+			"instrumentCurrencyValuation": 171200000.00,
+			"fxRate": 0.00083,
+			"bookCurrencyValuation": 142096.00,
+			"valuationInput": {
+				"numericInputData": {
+					"FX.Rate": 0.00083,
+					"Instrument.Price": 42800.00,
+					"Position.Quantity": 4000
+				},
+				"textInputData": {
+					"Instrument.Currency": "KRW",
+					"Book.Currency": "USD"
+				}
+			}
+		}
+	],
+	"trades": [],
+	"fxRates": [
+		{
+			"fromCurrency": "KRW",
+			"toCurrency": "USD",
+			"rate": 0.00084
+		}
+	],
+	"expectedPnl": [
+		{
+			"book": "EQTY1",
+			"instrument": "005930.KR",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"referenceValuation": {
+					"id": 1,
+					"book": "EQTY1",
+					"instrument": "005930.KR",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 9
+					},
+					"instrumentCurrencyValuation": 171200000.00,
+					"bookCurrencyValuation": 142096.00,
+					"fxRate": 0.00083,
+					"valuationInput": {
+						"id": 1,
+						"numericInputData": {
+							"FX.Rate": 0.00083,
+							"Instrument.Price": 42800.00,
+							"Position.Quantity": 4000
+						},
+						"textInputData": {
+							"Instrument.Currency": "KRW",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"currentValuation": {
+					"id": 2,
+					"book": "EQTY1",
+					"instrument": "005930.KR",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 170200000.00,
+					"bookCurrencyValuation": 142968.00,
+					"fxRate": 0.00084,
+					"valuationInput": {
+						"id": 2,
+						"numericInputData": {
+							"FX.Rate": 8.4E-4,
+							"Instrument.Price": 42550.0,
+							"Position.Quantity": 4000
+						},
+						"textInputData": {
+							"Instrument.Currency": "KRW",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": -1000000.00,
+				"mtmPnLFx": -840.00,
+				"fxPnL": 1702.00,
+				"ltdMtmPnL": -1000000.00,
+				"ltdMtmPnLFx": -840.00,
+				"ltdFxPnL": 1702.00
+			},
+			"realizedPnL": {
+				"proceeds": 0.00,
+				"fees": 0.00,
+				"commissions": 0.00,
+				"ltdProceeds": 0.00,
+				"ltdFees": 0.00,
+				"ltdCommissions": 0.00
+			}
+		}
+	]
+}
