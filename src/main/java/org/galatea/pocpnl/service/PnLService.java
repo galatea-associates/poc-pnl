@@ -77,8 +77,7 @@ public class PnLService {
       for (String instrument : instruments) {
         log.info("Calculating P&L for [{}, {}]", book, instrument);
         PnL eodPnL = calculatePnL(eodDate, referenceDate, book, instrument);
-        PnL ltdPnL = calculateLTDPnl(book, instrument, eodDate, eodPnL);
-        persistPnL(ltdPnL);
+        persistPnL(eodPnL);
       }
     }
 
@@ -134,6 +133,8 @@ public class PnLService {
 
     PnL pnlResult = PnL.builder().book(book).instrument(instrument).date(eodDate)
         .unrealizedPnL(unrealizedPnl).realizedPnL(realizedPnl).build();
+    
+    pnlResult = calculateLTDPnl(book, instrument, eodDate, pnlResult);
     return pnlResult;
   }
 
