@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PnLService {
 
+  private static final String ASSET_TYPE = "Instrument.AssetType";
   private static final String QTY = "Position.Quantity";
   private static final String PRICE = "Instrument.Price";
   private static final String BOOK_CURRENCY = "Book.Currency";
@@ -284,6 +285,11 @@ public class PnLService {
           inputData.addInput(input, rate);
           // assume if we're asked, we're looking for HKD->USD
           // inputData.addInput(input, 0.1275);
+          break;
+        case ASSET_TYPE:
+          String assetType =
+              instrumentService.getInstrumentAssetType(position.getInstrument());
+          inputData.addInput(input, assetType);
           break;
         default:
           // TODO: handle this error.

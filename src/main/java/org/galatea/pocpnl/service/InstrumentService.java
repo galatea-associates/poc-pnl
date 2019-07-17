@@ -17,4 +17,10 @@ public class InstrumentService {
     return instrumentStaticData.getCurrency();
   }
 
+  public String getInstrumentAssetType(String instrumentId) {
+    InstrumentStaticData instrumentStaticData =
+        instrumentStaticDataRepository.getByInstrumentId(instrumentId).get();
+    return instrumentStaticData.getAssetType().toString();
+  }
+
 }

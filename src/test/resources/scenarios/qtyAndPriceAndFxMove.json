@@ -20,7 +20,8 @@
 	"instrumentStaticData": [
 		{
 			"instrumentId": "0005.HK",
-			"currency": "HKD"
+			"currency": "HKD",
+			"assetType": "EQUITY"
 		}
 	],
 	"positions": [
@@ -156,6 +157,7 @@
 						},
 						"textInputData": {
 							"Instrument.Currency": "HKD",
+							"Instrument.AssetType":"AssetType.EQUITY",
 							"Book.Currency": "USD"
 						}
 					}

@@ -20,7 +20,8 @@
 	"instrumentStaticData": [
 		{
 			"instrumentId": "066570.KS",
-			"currency": "KRW"
+			"currency": "KRW",
+			"assetType": "EQUITY"
 		}
 	],
 	"positions": [
@@ -136,6 +137,7 @@
 						},
 						"textInputData": {
 							"Instrument.Currency": "KRW",
+							"Instrument.AssetType":"AssetType.EQUITY",
 							"Book.Currency": "USD"
 						}
 					}

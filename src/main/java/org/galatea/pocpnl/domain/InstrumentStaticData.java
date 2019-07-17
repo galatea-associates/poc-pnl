@@ -15,5 +15,6 @@ public class InstrumentStaticData {
   @Id
   private String instrumentId;
   private String currency;
+  private AssetType assetType;
 
 }

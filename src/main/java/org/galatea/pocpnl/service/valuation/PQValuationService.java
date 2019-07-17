@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PQValuationService implements IValuationService {
 
+  private static final String ASSET_TYPE = "Instrument.AssetType";
   private static final String QTY = "Position.Quantity";
   private static final String PRICE = "Instrument.Price";
   private static final String BOOK_CURRENCY = "Book.Currency";
@@ -21,7 +22,7 @@ public class PQValuationService implements IValuationService {
   private static final String FX_RATE = "FX.Rate";
 
   private static final Set<String> inputRequirements = new HashSet<String>(
-      Arrays.asList(BOOK_CURRENCY, INSTRUMENT_CURRENCY, PRICE, QTY));
+      Arrays.asList(BOOK_CURRENCY, INSTRUMENT_CURRENCY, ASSET_TYPE, PRICE, QTY));
 
   @Override
   public ValuationResponse value(ValuationInput valuationInput) {

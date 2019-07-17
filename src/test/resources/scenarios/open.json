@@ -20,7 +20,8 @@
 	"instrumentStaticData": [
 		{
 			"instrumentId": "AAPL",
-			"currency": "USD"
+			"currency": "USD",
+			"assetType": "EQUITY"
 		}
 	],
 	"positions": [
@@ -90,6 +91,7 @@
 						},
 						"textInputData": {
 							"Instrument.Currency": "USD",
+							"Instrument.AssetType":"AssetType.EQUITY",
 							"Book.Currency": "USD"
 						}
 					}
