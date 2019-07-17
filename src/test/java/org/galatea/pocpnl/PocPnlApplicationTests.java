@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -37,7 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @Slf4j
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class PocPnlApplicationTests {
 
@@ -86,22 +87,22 @@ public class PocPnlApplicationTests {
   public void purchaseAndPriceMoveTest() throws FileNotFoundException, IOException {
     runScenario(loadScenario("scenarios/purchaseAndPriceMove.json"));
   }
-  
+
   @Test
   public void openTest() throws FileNotFoundException, IOException {
     runScenario(loadScenario("scenarios/open.json"));
   }
-  
+
   @Test
   public void fxMoveTest() throws FileNotFoundException, IOException {
     runScenario(loadScenario("scenarios/fxMove.json"));
   }
-  
+
   @Test
   public void priceAndFxMoveTest() throws FileNotFoundException, IOException {
     runScenario(loadScenario("scenarios/priceAndFxMove.json"));
   }
-  
+
   @Test
   public void qtyAndPriceAndFxMoveTest() throws FileNotFoundException, IOException {
     runScenario(loadScenario("scenarios/qtyAndPriceAndFxMove.json"));
