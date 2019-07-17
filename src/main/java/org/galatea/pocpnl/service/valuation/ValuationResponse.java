@@ -5,6 +5,7 @@ import java.util.Set;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Value;
+import org.galatea.pocpnl.domain.InputData;
 import org.galatea.pocpnl.domain.ValuationResult;
 
 @Builder
@@ -17,7 +18,7 @@ public class ValuationResponse {
   private ValuationInput valuationInput = new ValuationInput();
 
   @Default
-  private Set<String> missingInput = new HashSet<>();
+  private Set<InputData> missingInput = new HashSet<>();
 
   public boolean isMoreDataNeeded() {
     return !missingInput.isEmpty();

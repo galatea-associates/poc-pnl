@@ -1,11 +1,23 @@
 package org.galatea.pocpnl.service.valuation;
 
+import static org.galatea.pocpnl.domain.InputData.BOOK_CURRENCY;
+import static org.galatea.pocpnl.domain.InputData.FX_RATE;
+import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_ASSET_TYPE;
+import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_CURRENCY;
+import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_PRICE;
+import static org.galatea.pocpnl.domain.InputData.POSITION_OPEN_COST;
+import static org.galatea.pocpnl.domain.InputData.POSITION_OPEN_DATE;
+import static org.galatea.pocpnl.domain.InputData.POSITION_QTY;
+import static org.galatea.pocpnl.domain.InputData.POSITION_YTM;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.galatea.pocpnl.domain.AssetType;
+import org.galatea.pocpnl.domain.InputData;
 import org.galatea.pocpnl.domain.ValuationResult;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -14,27 +26,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class PQValuationService implements IValuationService {
 
-  private static final String ASSET_TYPE = "Instrument.AssetType";
-  private static final String QTY = "Position.Quantity";
-  private static final String PRICE = "Instrument.Price";
-  private static final String BOOK_CURRENCY = "Book.Currency";
-  private static final String INSTRUMENT_CURRENCY = "Instrument.Currency";
-  private static final String FX_RATE = "FX.Rate";
 
-  private static final Set<String> inputRequirements = new HashSet<String>(
-      Arrays.asList(BOOK_CURRENCY, INSTRUMENT_CURRENCY, ASSET_TYPE, PRICE, QTY));
+  private static final Set<InputData> inputRequirements = new HashSet<>(
+      Arrays.asList(BOOK_CURRENCY, INSTRUMENT_CURRENCY,
+          INSTRUMENT_ASSET_TYPE, INSTRUMENT_PRICE, POSITION_QTY));
 
   @Override
   public ValuationResponse value(ValuationInput valuationInput) {
 
-    Set<String> missingInput = getMissingInput(valuationInput, inputRequirements);
+    Set<InputData> missingInput = getMissingInput(valuationInput, inputRequirements);
 
     if (!missingInput.isEmpty()) {
       return ValuationResponse.builder().missingInput(missingInput).build();
     }
 
-    double price = (double) valuationInput.get(PRICE);
-    int qty = (int) valuationInput.get(QTY);
+
+    AssetType assetType = AssetType.valueOf((String) valuationInput.get(INSTRUMENT_ASSET_TYPE));
+    if (assetType.equals(AssetType.FIXED_INCOME)) {
+      missingInput =
+          getMissingInput(valuationInput,
+              new HashSet<>(Arrays.asList(POSITION_OPEN_COST, POSITION_OPEN_DATE, POSITION_YTM)));
+      if (!missingInput.isEmpty()) {
+        return ValuationResponse.builder().missingInput(missingInput).build();
+      }
+    }
+
+
+    double price = (double) valuationInput.get(INSTRUMENT_PRICE);
+    int qty = (int) valuationInput.get(POSITION_QTY);
 
     String instrumentCurrency = (String) valuationInput.get(INSTRUMENT_CURRENCY);
     String bookCurrency = (String) valuationInput.get(BOOK_CURRENCY);
@@ -61,13 +80,13 @@ public class PQValuationService implements IValuationService {
         .valuationResult(valuationResult).build();
   }
 
-  private Set<String> getMissingInput(ValuationInput valuationInput,
-      Set<String> inputRequirements) {
+  private Set<InputData> getMissingInput(ValuationInput valuationInput,
+      Set<InputData> inputRequirements) {
     return inputRequirements.stream().filter(i -> !checkInput(valuationInput, i))
         .collect(Collectors.toSet());
   }
 
-  private boolean checkInput(ValuationInput valuationInput, String inputRequirement) {
+  private boolean checkInput(ValuationInput valuationInput, InputData inputRequirement) {
     return valuationInput.contains(inputRequirement);
   }
 

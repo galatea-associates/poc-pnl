@@ -37,6 +37,8 @@ public class Valuation {
   @Default
   private double fxRate = 1.0;
 
+  private BigDecimal accruedAmortization;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "valuationInput", referencedColumnName = "id")
   private ValuationInput valuationInput;

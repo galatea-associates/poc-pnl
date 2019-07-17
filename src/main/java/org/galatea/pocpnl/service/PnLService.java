@@ -1,5 +1,8 @@
 package org.galatea.pocpnl.service;
 
+import static org.galatea.pocpnl.domain.InputData.BOOK_CURRENCY;
+import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_CURRENCY;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.pocpnl.domain.InputData;
 import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.RealizedPnl;
@@ -27,13 +31,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class PnLService {
-
-  private static final String ASSET_TYPE = "Instrument.AssetType";
-  private static final String QTY = "Position.Quantity";
-  private static final String PRICE = "Instrument.Price";
-  private static final String BOOK_CURRENCY = "Book.Currency";
-  private static final String INSTRUMENT_CURRENCY = "Instrument.Currency";
-  private static final String FX_RATE = "FX.Rate";
 
   @Autowired
   private IValuationService valuationService;
@@ -250,12 +247,12 @@ public class PnLService {
   private ValuationInput augmentValuationInput(ValuationResponse valuationResponse,
       Position position) {
     ValuationInput inputData = valuationResponse.getValuationInput();
-    Set<String> missingInput = valuationResponse.getMissingInput();
+    Set<InputData> missingInput = valuationResponse.getMissingInput();
 
-    for (String input : missingInput) {
+    for (InputData input : missingInput) {
       log.debug("Including position {} to ValuationInput data {}", input, inputData);
       switch (input) {
-        case PRICE:
+        case INSTRUMENT_PRICE:
           // TODO: lookup price for this instrument
           double spotPrice = pricingService.getInstrumentPrice(position.getInstrument());
 
@@ -264,7 +261,7 @@ public class PnLService {
           // 100d;
           inputData.addInput(input, spotPrice);
           break;
-        case QTY:
+        case POSITION_QTY:
           inputData.addInput(input, position.getQty());
           break;
         case INSTRUMENT_CURRENCY:
@@ -286,7 +283,7 @@ public class PnLService {
           // assume if we're asked, we're looking for HKD->USD
           // inputData.addInput(input, 0.1275);
           break;
-        case ASSET_TYPE:
+        case INSTRUMENT_ASSET_TYPE:
           String assetType =
               instrumentService.getInstrumentAssetType(position.getInstrument());
           inputData.addInput(input, assetType);

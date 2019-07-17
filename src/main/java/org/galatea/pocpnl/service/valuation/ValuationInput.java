@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import lombok.Data;
+import org.galatea.pocpnl.domain.InputData;
 
 @Table(name = "valuationInput")
 @Entity
@@ -41,24 +42,25 @@ public class ValuationInput {
     this.textInputData = new HashMap<>();
   }
 
-  public void addInput(String inputName, Object inputValue) {
+  public void addInput(InputData inputName, Object inputValue) {
 
     if (inputValue instanceof Number) {
-      this.numericInputData.put(inputName, (Number) inputValue);
+      this.numericInputData.put(inputName.getName(), (Number) inputValue);
     } else {
-      this.textInputData.put(inputName, (String) inputValue);
+      this.textInputData.put(inputName.getName(), (String) inputValue);
     }
 
   }
 
-  public Object get(String inputName) {
-    return this.numericInputData.containsKey(inputName) ? this.numericInputData.get(inputName)
-        : this.textInputData.get(inputName);
+  public Object get(InputData inputName) {
+    return this.numericInputData.containsKey(inputName.getName())
+        ? this.numericInputData.get(inputName.getName())
+        : this.textInputData.get(inputName.getName());
   }
 
-  public boolean contains(String inputName) {
-    return this.numericInputData.containsKey(inputName)
-        || this.textInputData.containsKey(inputName);
+  public boolean contains(InputData inputName) {
+    return this.numericInputData.containsKey(inputName.getName())
+        || this.textInputData.containsKey(inputName.getName());
   }
 
 

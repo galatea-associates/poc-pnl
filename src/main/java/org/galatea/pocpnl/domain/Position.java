@@ -31,6 +31,10 @@ public class Position {
   private int qty;
 
   private double costBasis;
+
+  private LocalDate openDate;
+  private double ytm;
+
   @Id
   @NotNull
   private LocalDate date;

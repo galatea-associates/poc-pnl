@@ -20,7 +20,7 @@ public class InstrumentService {
   public String getInstrumentAssetType(String instrumentId) {
     InstrumentStaticData instrumentStaticData =
         instrumentStaticDataRepository.getByInstrumentId(instrumentId).get();
-    return instrumentStaticData.getAssetType().toString();
+    return instrumentStaticData.getAssetType().name();
   }
 
 }
