@@ -80,6 +80,7 @@
 					<th scope="col">LTD Cash Proceeds</th>
 					<th scope="col">Realized P&L</th>
 					<th scope="col">LTD Realized P&L</th>
+
 				</tr>
 			</thead>
 			<tbody>
@@ -87,63 +88,63 @@
 					<td th:text="${result.date}" />
 					<td th:text="${result.book}" />
 					<td th:text="${result.instrument}" />
-					<td th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("Book.Currency")}'/>
-					<td th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("Instrument.Currency")}'/>
+					<td th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("BOOK_CURRENCY")}'/>
+					<td th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("INSTRUMENT_CURRENCY")}'/>
 					<td
-						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("Position.Quantity")}' />
+						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("POSITION_QTY")}' />
 					<td class="withTooltip"
-						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("Instrument.Price")}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.referenceValuation.valuationInput.get('Instrument.Currency')}
+						th:text='${result.unrealizedPnL.referenceValuation.valuationInput.get("INSTRUMENT_PRICE")}' 
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.referenceValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}'
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.referenceValuation.valuationInput.get('Instrument.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.referenceValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td th:text='${result.unrealizedPnL.referenceValuation.fxRate}' />
 					<td class="withTooltip"
 						th:text=' ${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.referenceValuation.valuationInput.get('Book.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.referenceValuation.valuationInput.get('BOOK_CURRENCY')}
 						/>
 					<td
-						th:text='${result.unrealizedPnL.currentValuation.valuationInput.get("Position.Quantity")}' />
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.get("POSITION_QTY")}' />
 					<td class="withTooltip"
-						th:text='${result.unrealizedPnL.currentValuation.valuationInput.get("Instrument.Price")}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Instrument.Currency')}
+						th:text='${result.unrealizedPnL.currentValuation.valuationInput.get("INSTRUMENT_PRICE")}' 
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Instrument.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td th:text='${result.unrealizedPnL.currentValuation.fxRate}' />
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.currentValuation.bookCurrencyValuation}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Book.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('BOOK_CURRENCY')}
 						/>
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.mtmPnL}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Instrument.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.mtmPnLFx}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Book.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('BOOK_CURRENCY')}
 						/>
 					<td th:text="${result.unrealizedPnL.fxPnL}" />
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.ltdMtmPnL}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Instrument.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.ltdMtmPnLFx}' 
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Book.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('BOOK_CURRENCY')}
 						/>
 					<td th:text="${result.unrealizedPnL.ltdFxPnL}" />
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}-${result.unrealizedPnL.currentValuation.bookCurrencyValuation}'
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Book.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('BOOK_CURRENCY')}
 						/>
 					<td class="withTooltip"
 						th:text='${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}-${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}'
-						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Instrument.Currency')}
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td th:text="${result.realizedPnL.fees}" />
 					<td th:text="${result.realizedPnL.commissions}" />
@@ -153,7 +154,7 @@
 					<td th:text="${result.realizedPnL.ltdProceeds}" />
 					<td th:text="${result.realizedPnL.fees}+${result.realizedPnL.commissions}+${result.realizedPnL.proceeds}" />
 					<td th:text="${result.realizedPnL.ltdFees}+${result.realizedPnL.ltdCommissions}+${result.realizedPnL.ltdProceeds}" />
-
+					
 				</tr>
 
 			</tbody>
