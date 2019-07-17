@@ -56,6 +56,12 @@
 					<th scope="col">LTD MTM P&L</th>
 					<th scope="col">LTD MTM P&L (Book Currency)</th>
 					<th scope="col">LTD FX P&L</th>
+					<th scope="col">Fees</th>
+					<th scope="col">Commissions</th>
+					<th scope="col">Cash Proceeds</th>
+					<th scope="col">LTD Fees</th>
+					<th scope="col">LTD Commissions</th>
+					<th scope="col">LTD Cash Proceeds</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -111,6 +117,12 @@
 						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Book.Currency')}
 						/>
 					<td th:text="${result.unrealizedPnL.ltdFxPnL}" />
+					<td th:text="${result.realizedPnL.fees}" />
+					<td th:text="${result.realizedPnL.commissions}" />
+					<td th:text="${result.realizedPnL.proceeds}" />
+					<td th:text="${result.realizedPnL.ltdFees}" />
+					<td th:text="${result.realizedPnL.ltdCommissions}" />
+					<td th:text="${result.realizedPnL.ltdProceeds}" />
 
 				</tr>
 
