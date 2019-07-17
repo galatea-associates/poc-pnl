@@ -157,7 +157,7 @@
 						},
 						"textInputData": {
 							"Instrument.Currency": "HKD",
-							"Instrument.AssetType":"AssetType.EQUITY",
+							"Instrument.AssetType":"EQUITY",
 							"Book.Currency": "USD"
 						}
 					}

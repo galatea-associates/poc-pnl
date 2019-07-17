@@ -91,7 +91,7 @@
 						},
 						"textInputData": {
 							"Instrument.Currency": "USD",
-							"Instrument.AssetType":"AssetType.EQUITY",
+							"Instrument.AssetType":"EQUITY",
 							"Book.Currency": "USD"
 						}
 					}
