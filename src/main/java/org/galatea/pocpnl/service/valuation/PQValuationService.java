@@ -9,21 +9,15 @@ import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_PRICE;
 import static org.galatea.pocpnl.domain.InputData.POSITION_OPEN_COST;
 import static org.galatea.pocpnl.domain.InputData.POSITION_OPEN_DATE;
 import static org.galatea.pocpnl.domain.InputData.POSITION_QTY;
-import static org.galatea.pocpnl.domain.InputData.POSITION_YTM;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.galatea.pocpnl.domain.AssetType;
 import org.galatea.pocpnl.domain.InputData;
 import org.galatea.pocpnl.domain.ValuationResult;
-import org.galatea.pocpnl.domain.ValuationResult.ValuationResultBuilder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -31,94 +25,130 @@ import org.springframework.stereotype.Service;
 @Service
 public class PQValuationService implements IValuationService {
 
-
-  private static final Set<InputData> inputRequirements = new HashSet<>(
-      Arrays.asList(BOOK_CURRENCY, INSTRUMENT_CURRENCY,
-          INSTRUMENT_ASSET_TYPE, INSTRUMENT_PRICE, POSITION_QTY));
-
   @Override
   public ValuationResponse value(ValuationInput valuationInput) {
 
-    ValuationResultBuilder resultBuilder = ValuationResult.builder();
+    try {
+      AssetType assetType =
+          AssetType.valueOf((String) getInputData(valuationInput, INSTRUMENT_ASSET_TYPE));
 
-    Set<InputData> missingInput = getMissingInput(valuationInput, inputRequirements);
-
-    if (!missingInput.isEmpty()) {
-      return ValuationResponse.builder().missingInput(missingInput).build();
-    }
-
-
-    double price = (double) valuationInput.get(INSTRUMENT_PRICE);
-    int qty = (int) valuationInput.get(POSITION_QTY);
-
-    AssetType assetType = AssetType.valueOf((String) valuationInput.get(INSTRUMENT_ASSET_TYPE));
-
-    if (assetType.equals(AssetType.FIXED_INCOME)) {
-      missingInput =
-          getMissingInput(valuationInput,
-              new HashSet<>(Arrays.asList(POSITION_OPEN_COST, POSITION_OPEN_DATE, POSITION_YTM,
-                  INSTRUMENT_MATURITY_DATE)));
-      if (!missingInput.isEmpty()) {
-        return ValuationResponse.builder().valuationInput(valuationInput).missingInput(missingInput)
-            .build();
+      switch (assetType) {
+        case EQUITY:
+          return valueEquity(valuationInput);
+        case FIXED_INCOME:
+          return valueFixedIncome(valuationInput);
       }
 
-      double openCost = (double) valuationInput.get(POSITION_OPEN_COST);
-      LocalDate openDate = LocalDate.ofEpochDay((long) valuationInput.get(POSITION_OPEN_DATE));
-      LocalDate maturityDate =
-          LocalDate.ofEpochDay((long) valuationInput.get(INSTRUMENT_MATURITY_DATE));
-
-      long daysFromOpenDate =
-          Duration.between(openDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays();
-      long daysFromOpenToMaturity =
-          Duration.between(openDate.atStartOfDay(), maturityDate.atStartOfDay()).toDays();
-
-      // Accrued Amortization
-      BigDecimal accruedAmortization = new BigDecimal(qty * (100 - openCost) * daysFromOpenDate)
-          .divide(BigDecimal.valueOf(daysFromOpenToMaturity), 2, RoundingMode.HALF_UP);
-
-      resultBuilder.accruedAmortization(accruedAmortization);
-
-      BigDecimal bookValue = accruedAmortization.add(BigDecimal.valueOf(openCost * qty));
-      resultBuilder.bookValue(bookValue);
+    } catch (InputDataException e) {
+      return ValuationResponse.builder().valuationInput(valuationInput)
+          .missingInput(e.getMissingInput()).build();
     }
+    return null;
+  }
 
 
 
-    String instrumentCurrency = (String) valuationInput.get(INSTRUMENT_CURRENCY);
-    String bookCurrency = (String) valuationInput.get(BOOK_CURRENCY);
+  private ValuationResponse valueFixedIncome(ValuationInput valuationInput) {
 
-    BigDecimal instrumentCurrencyValuation = BigDecimal.valueOf(price * qty);
-    BigDecimal bookCurrencyValuation = instrumentCurrencyValuation;
-    double fxRate = 1.0;
-    if (!bookCurrency.equals(instrumentCurrency)) {
+    BigDecimal instrumentCurrencyValuation = getInstrumentValuation(valuationInput);
+    double fxRate = getFxRate(valuationInput);
+    BigDecimal bookCurrencyValuation =
+        getBookValuation(valuationInput, instrumentCurrencyValuation, fxRate);
 
-      if (!checkInput(valuationInput, FX_RATE)) {
-        return ValuationResponse.builder().valuationInput(valuationInput)
-            .missingInput(Collections.singleton(FX_RATE)).build();
-      }
+    BigDecimal accruedAmortization = getAccruedAmortization(valuationInput);
+    BigDecimal bookValue = getBookValue(valuationInput, accruedAmortization);
 
-      fxRate = (double) valuationInput.get(FX_RATE);
-      bookCurrencyValuation = BigDecimal.valueOf(price * qty * fxRate);
-    }
-
-    resultBuilder
+    ValuationResult result = ValuationResult.builder()
         .instrumentCurrencyValuation(instrumentCurrencyValuation)
         .bookCurrencyValuation(bookCurrencyValuation)
-        .fxRate(fxRate).build();
+        .accruedAmortization(accruedAmortization)
+        .bookValue(bookValue)
+        .fxRate(fxRate)
+        .build();
 
     return ValuationResponse.builder().valuationInput(valuationInput)
-        .valuationResult(resultBuilder.build()).build();
+        .valuationResult(result).build();
   }
 
-  private Set<InputData> getMissingInput(ValuationInput valuationInput,
-      Set<InputData> inputRequirements) {
-    return inputRequirements.stream().filter(i -> !checkInput(valuationInput, i))
-        .collect(Collectors.toSet());
+  private double getFxRate(ValuationInput valuationInput) {
+    String bookCurrency = (String) getInputData(valuationInput, BOOK_CURRENCY);
+    String instrumentCurrency = (String) getInputData(valuationInput, INSTRUMENT_CURRENCY);
+
+    double fxRate = 1.0;
+    if (!bookCurrency.equals(instrumentCurrency)) {
+      fxRate = (double) getInputData(valuationInput, FX_RATE);
+    }
+    return fxRate;
   }
 
-  private boolean checkInput(ValuationInput valuationInput, InputData inputRequirement) {
-    return valuationInput.contains(inputRequirement);
+
+
+  private ValuationResponse valueEquity(ValuationInput valuationInput) {
+    BigDecimal instrumentCurrencyValuation = getInstrumentValuation(valuationInput);
+    double fxRate = getFxRate(valuationInput);
+    BigDecimal bookCurrencyValuation =
+        getBookValuation(valuationInput, instrumentCurrencyValuation, fxRate);
+
+
+    ValuationResult result = ValuationResult.builder()
+        .instrumentCurrencyValuation(instrumentCurrencyValuation)
+        .bookCurrencyValuation(bookCurrencyValuation)
+        .fxRate(fxRate)
+        .build();
+
+    return ValuationResponse.builder().valuationInput(valuationInput)
+        .valuationResult(result).build();
+
+  }
+
+
+  private BigDecimal getInstrumentValuation(ValuationInput valuationInput) {
+    double price = (double) getInputData(valuationInput, INSTRUMENT_PRICE);
+    long qty = (int) getInputData(valuationInput, POSITION_QTY);
+    return BigDecimal.valueOf(price * qty);
+  }
+
+  private BigDecimal getBookValuation(ValuationInput valuationInput,
+      BigDecimal instrumentCurrencyValuation, double fxRate) {
+    return instrumentCurrencyValuation.multiply(BigDecimal.valueOf(fxRate));
+  }
+
+  private BigDecimal getAccruedAmortization(ValuationInput valuationInput) {
+    double openCost = (double) getInputData(valuationInput, POSITION_OPEN_COST);
+    LocalDate openDate =
+        LocalDate.ofEpochDay((long) getInputData(valuationInput, POSITION_OPEN_DATE));
+    LocalDate maturityDate =
+        LocalDate.ofEpochDay((long) getInputData(valuationInput, INSTRUMENT_MATURITY_DATE));
+
+    long daysFromOpenDate =
+        Duration.between(openDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays();
+    long daysFromOpenToMaturity =
+        Duration.between(openDate.atStartOfDay(), maturityDate.atStartOfDay()).toDays();
+
+    double qty = (int) getInputData(valuationInput, POSITION_QTY);
+
+    // Accrued Amortization
+    BigDecimal accruedAmortization = new BigDecimal(qty * (100 - openCost) * daysFromOpenDate)
+        .divide(BigDecimal.valueOf(daysFromOpenToMaturity), 2, RoundingMode.HALF_UP);
+
+    return accruedAmortization;
+  }
+
+  private BigDecimal getBookValue(ValuationInput valuationInput, BigDecimal accruedAmortization) {
+    double openCost = (double) getInputData(valuationInput, POSITION_OPEN_COST);
+    long qty = (int) getInputData(valuationInput, POSITION_QTY);
+    BigDecimal bookValue = accruedAmortization.add(BigDecimal.valueOf(openCost * qty));
+    return bookValue;
+  }
+
+
+  private Object getInputData(ValuationInput valuationInput, InputData inputRequirement)
+      throws InputDataException {
+    if (!valuationInput.contains(inputRequirement)) {
+      throw new InputDataException(Collections.singleton(inputRequirement));
+    }
+
+    return valuationInput.get(inputRequirement);
   }
 
 

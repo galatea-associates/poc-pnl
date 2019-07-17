@@ -27,7 +27,7 @@ public class FxRate {
   private double rate;
 
   public double getInverted() {
-    return rate / rate;
+    return 1 / rate;
   }
 
   @Data

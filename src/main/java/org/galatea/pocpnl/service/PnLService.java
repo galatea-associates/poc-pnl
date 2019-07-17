@@ -158,9 +158,9 @@ public class PnLService {
         .bookCurrencyValuation(
             valuationResponse.getValuationResult().getBookCurrencyValuation())
         .valuationInput(valuationResponse.getValuationInput())
-        .fxRate(valuationResponse.getValuationResult().getFxRate())
         .accruedAmortization(valuationResponse.getValuationResult().getAccruedAmortization())
         .bookValue(valuationResponse.getValuationResult().getBookValue())
+        .fxRate(valuationResponse.getValuationResult().getFxRate())
         .build();
 
     UnRealizedPnL pnlResult =
@@ -217,12 +217,14 @@ public class PnLService {
             .subtract(referenceValuation.getInstrumentCurrencyValuation())
         : currentValuation.getInstrumentCurrencyValuation();
 
-    BigDecimal mtmPnLFx = mtmPnL.multiply(BigDecimal.valueOf(currentValuation.getFxRate()));
+    double referencefxRate = referenceValuation != null ? referenceValuation.getFxRate() : 0.0;
+    double currentfxRate = currentValuation.getFxRate();
+    BigDecimal mtmPnLFx = mtmPnL.multiply(BigDecimal.valueOf(currentfxRate));
 
     // fxPnl = (current valuation in base ccy * (EOD fx rate - SOD fx rate)
     BigDecimal fxPnL = referenceValuation != null
         ? currentValuation.getInstrumentCurrencyValuation().multiply(
-            BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate()))
+            BigDecimal.valueOf(currentfxRate - referencefxRate))
         : BigDecimal.ZERO;
 
     log.info("Calculated P&L {} from {}, {}", mtmPnL, currentValuation, referenceValuation);
