@@ -1,0 +1,3 @@
+{ "instrumentId": "TSLA", "currency": "USD" , "assetType": "EQUITY"}
+{ "instrumentId": "0005.HK", "currency": "HKD", "assetType": "EQUITY"}
+{ "instrumentId": "IBM", "currency": "USD", "assetType": "EQUITY"}

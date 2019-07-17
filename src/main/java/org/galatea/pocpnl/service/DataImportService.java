@@ -11,12 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.galatea.pocpnl.domain.Book;
 import org.galatea.pocpnl.domain.FxRate;
 import org.galatea.pocpnl.domain.Instrument;
+import org.galatea.pocpnl.domain.InstrumentStaticData;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.Trade;
 import org.galatea.pocpnl.domain.Valuation;
 import org.galatea.pocpnl.repository.BookRepository;
 import org.galatea.pocpnl.repository.FxRepository;
 import org.galatea.pocpnl.repository.InstrumentRepository;
+import org.galatea.pocpnl.repository.InstrumentStaticDataRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.TradeRepository;
 import org.galatea.pocpnl.repository.ValuationRepository;
@@ -46,12 +48,16 @@ public class DataImportService {
   private InstrumentRepository instrumentRepository;
 
   @Autowired
+  private InstrumentStaticDataRepository instrumentStaticDataRepository;
+
+  @Autowired
   private BookRepository bookRepository;
 
   private String positionsFile = "data/positions.txt";
   private String valuationsFile = "data/valuations.txt";
   private String tradesFile = "data/trades.txt";
   private String instrumentsFile = "data/instruments.txt";
+  private String instrumentsStaticDataFile = "data/instrumentStaticData.txt";
   private String booksFile = "data/books.txt";
   private String ratesFile = "data/rates.txt";
 
@@ -64,6 +70,8 @@ public class DataImportService {
 
     importData(bookRepository, getLines(booksFile), Book.class);
     importData(instrumentRepository, getLines(instrumentsFile), Instrument.class);
+    importData(instrumentStaticDataRepository, getLines(instrumentsStaticDataFile),
+        InstrumentStaticData.class);
     importData(positionRepository, getLines(positionsFile), Position.class);
     importData(valuationRepository, getLines(valuationsFile), Valuation.class);
     importData(tradeRepository, getLines(tradesFile), Trade.class);
