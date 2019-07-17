@@ -74,6 +74,8 @@
 					<th scope="col">LTD Fees</th>
 					<th scope="col">LTD Commissions</th>
 					<th scope="col">LTD Cash Proceeds</th>
+					<th scope="col">Realized P&L</th>
+					<th scope="col">LTD Realized P&L</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -135,6 +137,8 @@
 					<td th:text="${result.realizedPnL.ltdFees}" />
 					<td th:text="${result.realizedPnL.ltdCommissions}" />
 					<td th:text="${result.realizedPnL.ltdProceeds}" />
+					<td th:text="${result.realizedPnL.fees}+${result.realizedPnL.commissions}+${result.realizedPnL.proceeds}" />
+					<td th:text="${result.realizedPnL.ltdFees}+${result.realizedPnL.ltdCommissions}+${result.realizedPnL.ltdProceeds}" />
 
 				</tr>
 
