@@ -27,7 +27,7 @@
 				"month": 05,
 				"day": 15
 			},
-			"couponRate": 2.375
+			"couponRate": 0.02375
 		}
 	],
 	"positions": [
@@ -79,6 +79,10 @@
 			"valuationInput": {
 				"numericInputData": {
 					"Instrument.Price": 101.125,
+					"Position.OpenDate":17956,
+						"Position.OpenCost":99.0,
+						"Instrument.MaturityDate":21684,
+						"Instrument.CouponRate":0.02375,
 					"Position.Quantity": 100000
 				},
 				"textInputData": {
@@ -117,7 +121,11 @@
 						"id": 1,
 						"numericInputData": {
 							"Instrument.Price": 101.125,
-							"Position.Quantity": 100000
+							"Position.OpenDate":17956,
+							"Position.OpenCost":99.0,
+							"Instrument.MaturityDate":21684,
+							"Instrument.CouponRate":0.02375,
+							"Position.Quantity":100000
 						},
 						"textInputData": {
 							"Instrument.Currency": "USD",
@@ -137,13 +145,17 @@
 					"instrumentCurrencyValuation": 10112500.00,
 					"bookCurrencyValuation": 10112500.00,
 					"fxRate": 1.0,
-					"accruedAmortization": 3701.716738,
-					"bookValue": 9903701.717,
-					"interestAccrued": 6.5068, 
+					"accruedAmortization": 3701.72,
+					"bookValue": 9903701.72,
+					"interestAccrued": 6.51, 
 					"valuationInput": {
 						"id": 2,
 						"numericInputData": {
 							"Instrument.Price": 101.125,
+							"Position.OpenDate":17956,
+							"Position.OpenCost":99.0,
+							"Instrument.MaturityDate":21684,
+							"Instrument.CouponRate":0.02375,
 							"Position.Quantity": 100000 
 						},
 						"textInputData": {
