@@ -58,6 +58,10 @@ public class ValuationInput {
         : this.textInputData.get(inputName.getName());
   }
 
+  public Object get(String inputName) {
+    return get(InputData.valueOf(inputName));
+  }
+
   public boolean contains(InputData inputName) {
     return this.numericInputData.containsKey(inputName.getName())
         || this.textInputData.containsKey(inputName.getName());

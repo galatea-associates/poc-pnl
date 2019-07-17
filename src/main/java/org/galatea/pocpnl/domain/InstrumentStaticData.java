@@ -1,5 +1,6 @@
 package org.galatea.pocpnl.domain;
 
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,5 +17,6 @@ public class InstrumentStaticData {
   private String instrumentId;
   private String currency;
   private AssetType assetType;
+  private LocalDate maturityDate;
 
 }

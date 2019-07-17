@@ -10,6 +10,8 @@ public class ValuationResult {
 
   private BigDecimal instrumentCurrencyValuation;
   private BigDecimal bookCurrencyValuation;
+  private BigDecimal accruedAmortization;
+  private BigDecimal bookValue;
   private double fxRate;
 
 }

@@ -1,4 +1,4 @@
 { "instrumentId": "TSLA", "spotPrice": 234.30}
 { "instrumentId": "0005.HK", "spotPrice": 68.10}
 { "instrumentId": "IBM", "spotPrice": 140}
-{ "instrumentId": "TMUBMUSD10Y", "spotPrice": 101.13, "assetType": "FIXED_INCOME"}
+{ "instrumentId": "TMUBMUSD10Y", "spotPrice": 101.125, "assetType": "FIXED_INCOME"}

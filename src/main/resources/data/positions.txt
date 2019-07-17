@@ -1,3 +1,4 @@
 {"book":"EQTY1","instrument":"TSLA","qty":1000,"costBasis":234.30, "date":{"year":2019,"month":7,"day":10}}
 {"book":"EQTY1","instrument":"IBM","qty":700,"costBasis":140, "date":{"year":2019,"month":7,"day":10}}
 {"book":"EQTY1","instrument":"0005.HK","qty":1000,"costBasis":68.10, "date":{"year":2019,"month":7,"day":10}}
+{"book":"EQTY1","instrument":"TMUBMUSD10Y","qty":100000,"costBasis": 99.00 , "date":{"year":2019,"month":7,"day":10}, "openDate":{"year":2019,"month":03,"day":01}}

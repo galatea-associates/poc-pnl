@@ -1,4 +1,4 @@
 { "instrumentId": "TSLA", "currency": "USD" , "assetType": "EQUITY"}
 { "instrumentId": "0005.HK", "currency": "HKD", "assetType": "EQUITY"}
 { "instrumentId": "IBM", "currency": "USD", "assetType": "EQUITY"}
-{ "instrumentId": "TMUBMUSD10Y", "currency": "USD", "assetType": "FIXED_INCOME"}
+{ "instrumentId": "TMUBMUSD10Y", "currency": "USD", "assetType": "FIXED_INCOME", "maturityDate":{"year":2029,"month":05,"day":15}}

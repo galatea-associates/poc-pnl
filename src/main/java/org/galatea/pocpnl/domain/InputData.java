@@ -12,11 +12,17 @@ public enum InputData {
   POSITION_OPEN_DATE("Position.OpenDate"),
   POSITION_YTM("Position.YTM"),
   INSTRUMENT_PRICE("Instrument.Price"),
+  INSTRUMENT_MATURITY_DATE("Instrument.MaturityDate"),
   BOOK_CURRENCY("Book.Currency"),
   INSTRUMENT_CURRENCY("Instrument.Currency"),
   FX_RATE("FX.Rate");
 
 
   private final String name;
+
+  @Override
+  public String toString() {
+    return this.getName();
+  }
 
 }

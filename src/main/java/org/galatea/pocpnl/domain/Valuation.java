@@ -34,10 +34,11 @@ public class Valuation {
   private LocalDate date;
   private BigDecimal instrumentCurrencyValuation;
   private BigDecimal bookCurrencyValuation;
+  private BigDecimal accruedAmortization;
+  private BigDecimal bookValue;
   @Default
   private double fxRate = 1.0;
 
-  private BigDecimal accruedAmortization;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "valuationInput", referencedColumnName = "id")

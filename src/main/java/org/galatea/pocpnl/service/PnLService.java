@@ -158,7 +158,10 @@ public class PnLService {
         .bookCurrencyValuation(
             valuationResponse.getValuationResult().getBookCurrencyValuation())
         .valuationInput(valuationResponse.getValuationInput())
-        .fxRate(valuationResponse.getValuationResult().getFxRate()).build();
+        .fxRate(valuationResponse.getValuationResult().getFxRate())
+        .accruedAmortization(valuationResponse.getValuationResult().getAccruedAmortization())
+        .bookValue(valuationResponse.getValuationResult().getBookValue())
+        .build();
 
     UnRealizedPnL pnlResult =
         calculatePnl(currentValuation, referenceValuation, referenceValuationKey);
@@ -191,7 +194,7 @@ public class PnLService {
 
     ValuationResponse valuationResponse = valuationService.value(valuationInput);
     while (valuationResponse.isMoreDataNeeded()) {
-      log.debug("More data needed for valuating position: {}, {}", position, valuationResponse);
+      log.info("More data needed for valuating position: {}, {}", position, valuationResponse);
       // get more data and revalue..
       valuationInput = augmentValuationInput(valuationResponse, position);
 
@@ -265,15 +268,11 @@ public class PnLService {
           inputData.addInput(input, position.getQty());
           break;
         case INSTRUMENT_CURRENCY:
-          // inputData.addInput(input, position.getInstrument().endsWith("HK") ? "HKD" : "USD");
-          String instrumentCurrency =
-              instrumentService.getInstrumentCurrency(position.getInstrument());
-          inputData.addInput(input, instrumentCurrency);
+          inputData.addInput(input,
+              instrumentService.getInstrumentCurrency(position.getInstrument()));
           break;
         case BOOK_CURRENCY:
-          String bookCurrency = bookService.getBookCurrency(position.getBook());
-          inputData.addInput(input, bookCurrency);
-          // inputData.addInput(input, "USD");
+          inputData.addInput(input, bookService.getBookCurrency(position.getBook()));
           break;
         case FX_RATE:
           String from = (String) inputData.get(INSTRUMENT_CURRENCY);
@@ -284,9 +283,21 @@ public class PnLService {
           // inputData.addInput(input, 0.1275);
           break;
         case INSTRUMENT_ASSET_TYPE:
-          String assetType =
-              instrumentService.getInstrumentAssetType(position.getInstrument());
-          inputData.addInput(input, assetType);
+          inputData.addInput(input,
+              instrumentService.getInstrumentAssetType(position.getInstrument()));
+          break;
+        case POSITION_OPEN_COST:
+          inputData.addInput(input, position.getCostBasis());
+          break;
+        case POSITION_OPEN_DATE:
+          inputData.addInput(input, position.getOpenDate().toEpochDay());
+          break;
+        case POSITION_YTM:
+          inputData.addInput(input, position.getYtm());
+          break;
+        case INSTRUMENT_MATURITY_DATE:
+          inputData.addInput(input,
+              instrumentService.getInstrumentMaturityDate(position.getInstrument()).toEpochDay());
           break;
         default:
           // TODO: handle this error.

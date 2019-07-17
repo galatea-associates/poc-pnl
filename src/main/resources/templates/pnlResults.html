@@ -80,7 +80,8 @@
 					<th scope="col">LTD Cash Proceeds</th>
 					<th scope="col">Realized P&L</th>
 					<th scope="col">LTD Realized P&L</th>
-
+					<th scope="col">Accrued Amortization</th>
+					<th scope="col">Book Value</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -154,7 +155,12 @@
 					<td th:text="${result.realizedPnL.ltdProceeds}" />
 					<td th:text="${result.realizedPnL.fees}+${result.realizedPnL.commissions}+${result.realizedPnL.proceeds}" />
 					<td th:text="${result.realizedPnL.ltdFees}+${result.realizedPnL.ltdCommissions}+${result.realizedPnL.ltdProceeds}" />
-					
+					<td class="withTooltip"
+						th:text='${result.unrealizedPnL.currentValuation.accruedAmortization}'
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')} />
+					<td class="withTooltip"
+						th:text='${result.unrealizedPnL.currentValuation.bookValue}'
+						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('BOOK_CURRENCY')} />
 				</tr>
 
 			</tbody>
