@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title th:text="'P&L'"></title>
+		<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body>
+<div class="container" style="max-width: 95%; margin-top: 1%;">
+<canvas id="myChart"></canvas>
+</div>
+<script th:inline="javascript">
+
+
+
+valuations = [[${valuations}]];
+
+var groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+
+var dynamicColors = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            return "rgb(" + r + "," + g + "," + b + ")";
+         };
+
+function getDatasets(valuations) {
+	
+	instruments = groupBy(valuations, "instrument")
+	
+	datasets = [];
+	datesLabels = [];
+	for (instrument in instruments) {
+		dataset = {}
+		dataset["label"] = instrument;
+		dataset["data"] = instruments[instrument].map(i => i.instrumentCurrencyValuation);
+		dataset["fill"] = false;
+		dataset["borderColor"] = dynamicColors();
+		datasets.push(dataset);
+		[].push.apply(datesLabels, instruments[instrument].map(i => i.date));
+	}
+	
+	datesLabels = [...new Set(datesLabels.sort())];
+
+}
+
+function graph(valuations) {
+
+	instrumentCurrencyValuation = valuations.map(v => v.instrumentCurrencyValuation)
+	book = valuations[0].book
+	instrument = valuations[0].instrument
+	
+	getDatasets(valuations);
+	
+	var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: datesLabels,
+        datasets: datasets
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}
+</script>
+</body>
+</html>
