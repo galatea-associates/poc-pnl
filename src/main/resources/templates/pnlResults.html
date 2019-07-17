@@ -27,7 +27,19 @@
 }
 </style>
 <body>
-
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item "><a class="nav-link"
+					th:href="@{/positions}">Positions <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item active"><a class="nav-link" th:href="@{/pnl}">P&L</a>
+				</li>
+				<li class="nav-item "><a class="nav-link"
+					th:href="@{/vot}">Valuation Over Time</a></li>
+			</ul>
+		</div>
+	</nav>
 
 	<div class="container" style="max-width: 95%; margin-top: 1%;">
 		<div id="table_id_filter" class="col col-lg-10">
@@ -56,6 +68,12 @@
 					<th scope="col">LTD MTM P&L</th>
 					<th scope="col">LTD MTM P&L (Book Currency)</th>
 					<th scope="col">LTD FX P&L</th>
+					<th scope="col">Fees</th>
+					<th scope="col">Commissions</th>
+					<th scope="col">Cash Proceeds</th>
+					<th scope="col">LTD Fees</th>
+					<th scope="col">LTD Commissions</th>
+					<th scope="col">LTD Cash Proceeds</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -111,6 +129,12 @@
 						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('Book.Currency')}
 						/>
 					<td th:text="${result.unrealizedPnL.ltdFxPnL}" />
+					<td th:text="${result.realizedPnL.fees}" />
+					<td th:text="${result.realizedPnL.commissions}" />
+					<td th:text="${result.realizedPnL.proceeds}" />
+					<td th:text="${result.realizedPnL.ltdFees}" />
+					<td th:text="${result.realizedPnL.ltdCommissions}" />
+					<td th:text="${result.realizedPnL.ltdProceeds}" />
 
 				</tr>
 
