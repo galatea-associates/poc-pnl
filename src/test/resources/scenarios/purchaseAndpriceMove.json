@@ -14,7 +14,12 @@
 	"instruments": [
 		{
 			"instrumentId": "TSLA",
-			"spotPrice": 75.00,
+			"spotPrice": 75.00
+		}
+	],
+	"instrumentStaticData": [
+		{
+			"instrumentId": "TSLA",
 			"currency": "USD"
 		}
 	],

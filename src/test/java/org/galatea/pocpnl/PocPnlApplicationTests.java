@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.galatea.pocpnl.domain.Book;
 import org.galatea.pocpnl.domain.FxRate;
 import org.galatea.pocpnl.domain.Instrument;
+import org.galatea.pocpnl.domain.InstrumentStaticData;
 import org.galatea.pocpnl.domain.PnL;
 import org.galatea.pocpnl.domain.Position;
 import org.galatea.pocpnl.domain.Trade;
@@ -20,6 +21,7 @@ import org.galatea.pocpnl.domain.Valuation;
 import org.galatea.pocpnl.repository.BookRepository;
 import org.galatea.pocpnl.repository.FxRepository;
 import org.galatea.pocpnl.repository.InstrumentRepository;
+import org.galatea.pocpnl.repository.InstrumentStaticDataRepository;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.TradeRepository;
@@ -49,6 +51,9 @@ public class PocPnlApplicationTests {
 
   @Autowired
   private InstrumentRepository instrumentRepository;
+
+  @Autowired
+  private InstrumentStaticDataRepository instrumentStaticDataRepository;
 
   @Autowired
   private PositionRepository positionRepository;
@@ -112,6 +117,7 @@ public class PocPnlApplicationTests {
     log.info("TEST: {}", scenario.getName());
     loadBooks(scenario.getBooks());
     loadInstruments(scenario.getInstruments());
+    loadInstrumentStaticData(scenario.getInstrumentStaticData());
     loadPositions(scenario.getPositions());
     loadValuations(scenario.getValuations());
     loadTraders(scenario.getTrades());
@@ -139,6 +145,13 @@ public class PocPnlApplicationTests {
     instrumentRepository.saveAll(instruments);
     log.info("Loaded {} Instruments {}", instruments.size(), instruments);
   }
+
+  private void loadInstrumentStaticData(List<InstrumentStaticData> instrumentStaticData) {
+    instrumentStaticDataRepository.saveAll(instrumentStaticData);
+    log.info("Loaded {} Instrument Static Data {}", instrumentStaticData.size(),
+        instrumentStaticData);
+  }
+
 
   private void loadPositions(List<Position> positions) {
     positionRepository.saveAll(positions);

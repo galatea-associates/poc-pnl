@@ -12,9 +12,14 @@
 		}
 	],
 	"instruments": [
+{
+			"instrumentId": "066570.KS",
+			"spotPrice": 77000.00
+		}
+	],
+	"instrumentStaticData": [
 		{
 			"instrumentId": "066570.KS",
-			"spotPrice": 77000.00,
 			"currency": "KRW"
 		}
 	],

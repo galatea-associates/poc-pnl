@@ -14,7 +14,12 @@
 	"instruments": [
 		{
 			"instrumentId": "IBM",
-			"spotPrice": 106.00,
+			"spotPrice": 106.00
+		}
+	],
+	"instrumentStaticData": [
+		{
+			"instrumentId": "IBM",
 			"currency": "USD"
 		}
 	],

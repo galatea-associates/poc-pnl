@@ -14,12 +14,20 @@
 	"instruments": [
 		{
 			"instrumentId": "TSLA",
-			"spotPrice": 234.30,
+			"spotPrice": 234.30
+		},
+		{
+			"instrumentId": "0005.HK",
+			"spotPrice": 68.10
+		}
+	],
+	"instrumentStaticData": [
+		{
+			"instrumentId": "TSLA",
 			"currency": "USD"
 		},
 		{
 			"instrumentId": "0005.HK",
-			"spotPrice": 68.10,
 			"currency": "HKD"
 		}
 	],

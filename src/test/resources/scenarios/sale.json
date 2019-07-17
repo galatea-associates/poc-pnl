@@ -14,7 +14,12 @@
 	"instruments": [
 		{
 			"instrumentId": "DNKN",
-			"spotPrice": 74.00,
+			"spotPrice": 74.00
+		}
+	],
+	"instrumentStaticData": [
+		{
+			"instrumentId": "DNKN",
 			"currency": "USD"
 		}
 	],

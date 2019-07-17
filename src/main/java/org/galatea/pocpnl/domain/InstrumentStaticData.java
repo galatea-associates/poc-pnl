@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "instruments")
+@Table(name = "instrumentStaticData")
 @Data
-public class Instrument {
+public class InstrumentStaticData {
 
   @Id
   private String instrumentId;
-  private double spotPrice;
+  private String currency;
 
 }

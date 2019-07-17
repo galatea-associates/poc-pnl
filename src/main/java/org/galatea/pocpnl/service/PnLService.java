@@ -53,6 +53,9 @@ public class PnLService {
   private InstrumentService instrumentService;
 
   @Autowired
+  private PricingService pricingService;
+
+  @Autowired
   private FxService fxService;
 
   @Autowired
@@ -133,7 +136,7 @@ public class PnLService {
 
     PnL pnlResult = PnL.builder().book(book).instrument(instrument).date(eodDate)
         .unrealizedPnL(unrealizedPnl).realizedPnL(realizedPnl).build();
-    
+
     pnlResult = calculateLTDPnl(book, instrument, eodDate, pnlResult);
     return pnlResult;
   }
@@ -168,17 +171,18 @@ public class PnLService {
     RealizedPnl realizedPnl = new RealizedPnl();
     for (Trade trade : trades) {
       log.info("Applying impact of trade {} to realized P&L", trade);
-      
+
       String bookCurrency = bookService.getBookCurrency(trade.getBook());
       String instrumentCurrency =
-              instrumentService.getInstrumentCurrency(trade.getInstrument());
-      
-      double fxRate = instrumentCurrency.equals(bookCurrency) ? 1.00 : fxService.getRate(instrumentCurrency, bookCurrency);
-      
+          instrumentService.getInstrumentCurrency(trade.getInstrument());
+
+      double fxRate = instrumentCurrency.equals(bookCurrency) ? 1.00
+          : fxService.getRate(instrumentCurrency, bookCurrency);
+
       // calculate Realized PnL
-      realizedPnl.addProceeds(-1 * trade.getValue()*fxRate);
-      realizedPnl.addFees(-1 * trade.getFee()*fxRate);
-      realizedPnl.addCommissions(-1 * trade.getCommission()*fxRate);
+      realizedPnl.addProceeds(-1 * trade.getValue() * fxRate);
+      realizedPnl.addFees(-1 * trade.getFee() * fxRate);
+      realizedPnl.addCommissions(-1 * trade.getCommission() * fxRate);
       log.info("Applied impact of trade {} to realized P&L: {}", trade, realizedPnl);
     }
     return realizedPnl;
@@ -207,15 +211,18 @@ public class PnLService {
   private UnRealizedPnL calculatePnl(Valuation currentValuation, Valuation referenceValuation,
       ValuationKey valuationReferenceKey) {
 
-    BigDecimal mtmPnL = referenceValuation != null ? currentValuation.getInstrumentCurrencyValuation()
-        .subtract(referenceValuation.getInstrumentCurrencyValuation()) : currentValuation.getInstrumentCurrencyValuation();
+    BigDecimal mtmPnL = referenceValuation != null
+        ? currentValuation.getInstrumentCurrencyValuation()
+            .subtract(referenceValuation.getInstrumentCurrencyValuation())
+        : currentValuation.getInstrumentCurrencyValuation();
 
     BigDecimal mtmPnLFx = mtmPnL.multiply(BigDecimal.valueOf(currentValuation.getFxRate()));
 
     // fxPnl = (current valuation in base ccy * (EOD fx rate - SOD fx rate)
-    BigDecimal fxPnL = referenceValuation != null ?
-        currentValuation.getInstrumentCurrencyValuation().multiply(
-            BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate())) : BigDecimal.ZERO;
+    BigDecimal fxPnL = referenceValuation != null
+        ? currentValuation.getInstrumentCurrencyValuation().multiply(
+            BigDecimal.valueOf(currentValuation.getFxRate() - referenceValuation.getFxRate()))
+        : BigDecimal.ZERO;
 
     log.info("Calculated P&L {} from {}, {}", mtmPnL, currentValuation, referenceValuation);
     return UnRealizedPnL.builder().referenceValuation(referenceValuation)
@@ -226,12 +233,12 @@ public class PnLService {
   private Valuation getReferenceValuation(ValuationKey valuationReferenceKey) {
     // Fetch reference valuation
     log.debug("Fetching reference valuation for {}", valuationReferenceKey);
-    
+
     Optional<Valuation> result = valuationRepository
         .findByBookAndInstrumentAndDate(valuationReferenceKey.getBook(),
             valuationReferenceKey.getInstrument(), valuationReferenceKey.getDate());
     log.debug("Fetched reference valuation for {}: {}", valuationReferenceKey, result);
-    
+
     return result.orElse(null);
   }
 
@@ -249,7 +256,7 @@ public class PnLService {
       switch (input) {
         case PRICE:
           // TODO: lookup price for this instrument
-          double spotPrice = instrumentService.getInstrumentPrice(position.getInstrument());
+          double spotPrice = pricingService.getInstrumentPrice(position.getInstrument());
 
           // for now, move the price somewhere within +/- 10% of the cost basis for the position
           // double spotPrice = (int) (position.getCostBasis() * (.9 + Math.random() / 5) * 100) /

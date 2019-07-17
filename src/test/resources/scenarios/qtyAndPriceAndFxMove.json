@@ -14,7 +14,12 @@
 	"instruments": [
 		{
 			"instrumentId": "0005.HK",
-			"spotPrice": 64.85,
+			"spotPrice": 64.85
+		}
+	],
+	"instrumentStaticData": [
+		{
+			"instrumentId": "0005.HK",
 			"currency": "HKD"
 		}
 	],

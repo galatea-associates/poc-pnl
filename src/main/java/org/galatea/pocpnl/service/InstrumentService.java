@@ -1,7 +1,7 @@
 package org.galatea.pocpnl.service;
 
-import org.galatea.pocpnl.domain.Instrument;
-import org.galatea.pocpnl.repository.InstrumentRepository;
+import org.galatea.pocpnl.domain.InstrumentStaticData;
+import org.galatea.pocpnl.repository.InstrumentStaticDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,16 +9,12 @@ import org.springframework.stereotype.Service;
 public class InstrumentService {
 
   @Autowired
-  private InstrumentRepository instrumentRepository;
-
-  public double getInstrumentPrice(String instrumentId) {
-    Instrument instrument = instrumentRepository.getByInstrumentId(instrumentId).get();
-    return instrument.getSpotPrice();
-  }
+  private InstrumentStaticDataRepository instrumentStaticDataRepository;
 
   public String getInstrumentCurrency(String instrumentId) {
-    Instrument instrument = instrumentRepository.getByInstrumentId(instrumentId).get();
-    return instrument.getCurrency();
+    InstrumentStaticData instrumentStaticData =
+        instrumentStaticDataRepository.getByInstrumentId(instrumentId).get();
+    return instrumentStaticData.getCurrency();
   }
 
 }
