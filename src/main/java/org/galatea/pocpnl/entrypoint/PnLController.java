@@ -22,7 +22,7 @@ public class PnLController {
     Iterable<Position> positions = positionRepository.findAll();
 
     model.addAttribute("positions", positions);
-    return "positions2"; // view
+    return "positions"; // view
   }
 
   @GetMapping("/pnl")
