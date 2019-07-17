@@ -13,5 +13,6 @@ public class ValuationResult {
   private BigDecimal accruedAmortization;
   private BigDecimal bookValue;
   private double fxRate;
+  private BigDecimal interestAccrued;
 
 }

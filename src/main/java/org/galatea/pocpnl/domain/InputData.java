@@ -13,6 +13,7 @@ public enum InputData {
   POSITION_YTM("Position.YTM"),
   INSTRUMENT_PRICE("Instrument.Price"),
   INSTRUMENT_MATURITY_DATE("Instrument.MaturityDate"),
+  INSTRUMENT_COUPON_RATE("Instrument.CouponRate"),
   BOOK_CURRENCY("Book.Currency"),
   INSTRUMENT_CURRENCY("Instrument.Currency"),
   FX_RATE("FX.Rate");

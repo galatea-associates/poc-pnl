@@ -161,6 +161,7 @@ public class PnLService {
         .accruedAmortization(valuationResponse.getValuationResult().getAccruedAmortization())
         .bookValue(valuationResponse.getValuationResult().getBookValue())
         .fxRate(valuationResponse.getValuationResult().getFxRate())
+        .interestAccrued(valuationResponse.getValuationResult().getInterestAccrued())
         .build();
 
     UnRealizedPnL pnlResult =
@@ -300,6 +301,10 @@ public class PnLService {
         case INSTRUMENT_MATURITY_DATE:
           inputData.addInput(input,
               instrumentService.getInstrumentMaturityDate(position.getInstrument()).toEpochDay());
+          break;
+        case INSTRUMENT_COUPON_RATE:
+          inputData.addInput(input,
+              instrumentService.getInstrumentCouponRate(position.getInstrument()));
           break;
         default:
           // TODO: handle this error.

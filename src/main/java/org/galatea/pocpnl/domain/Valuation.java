@@ -36,6 +36,9 @@ public class Valuation {
   private BigDecimal bookCurrencyValuation;
   private BigDecimal accruedAmortization;
   private BigDecimal bookValue;
+
+  private BigDecimal interestAccrued;
+
   @Default
   private double fxRate = 1.0;
 

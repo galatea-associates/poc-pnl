@@ -1,0 +1,173 @@
+{
+	"name": "Accrued Interest+Accretion",
+	"eod": {
+		"year": 2019,
+		"month": 7,
+		"day": 10
+	},
+	"books": [
+		{
+			"bookId": "EQTY1",
+			"currency": "USD"
+		}
+	],
+	"instruments": [
+		{
+			"instrumentId": "TMUBMUSD10Y",
+			"spotPrice": 101.125
+		}
+	],
+	"instrumentStaticData": [
+		{
+			"instrumentId": "TMUBMUSD10Y",
+			"currency": "USD",
+			"assetType": "FIXED_INCOME",
+			"maturityDate": {
+				"year": 2029,
+				"month": 05,
+				"day": 15
+			},
+			"couponRate": 2.375
+		}
+	],
+	"positions": [
+		{
+			"book": "EQTY1",
+			"instrument": "TMUBMUSD10Y",
+			"qty": 100000,
+			"costBasis": 99.00,
+			"openDate": {
+				"year": 2019,
+				"month": 03,
+				"day": 01
+			},
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			}
+		},
+		{
+			"book": "EQTY1",
+			"instrument": "TMUBMUSD10Y",
+			"qty": 100000,
+			"costBasis": 99.00,
+			"openDate": {
+				"year": 2019,
+				"month": 03,
+				"day": 01
+			},
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			}
+		}
+	],
+	"valuations": [
+		{
+			"book": "EQTY1",
+			"instrument": "TMUBMUSD10Y",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 09
+			},
+			"instrumentCurrencyValuation": 10112500.00,
+			"fxRate": 1.0,
+			"bookCurrencyValuation": 10112500.00,
+			"valuationInput": {
+				"numericInputData": {
+					"Instrument.Price": 101.125,
+					"Position.Quantity": 100000
+				},
+				"textInputData": {
+					"Instrument.Currency": "USD",
+					"Book.Currency": "USD"
+				}
+			}
+		}
+	],
+	"trades": [
+	],
+	"fxRates": [],
+	"expectedPnl": [
+		{
+			"book": "EQTY1",
+			"instrument": "TMUBMUSD10Y",
+			"date": {
+				"year": 2019,
+				"month": 7,
+				"day": 10
+			},
+			"unrealizedPnL": {
+				"referenceValuation": {
+					"id": 1,
+					"book": "EQTY1",
+					"instrument": "TMUBMUSD10Y",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 9
+					},
+					"instrumentCurrencyValuation": 10112500.00,
+					"bookCurrencyValuation": 10112500.00,
+					"fxRate": 1.0,
+					"valuationInput": {
+						"id": 1,
+						"numericInputData": {
+							"Instrument.Price": 101.125,
+							"Position.Quantity": 100000
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"currentValuation": {
+					"id": 2,
+					"book": "EQTY1",
+					"instrument": "TMUBMUSD10Y",
+					"date": {
+						"year": 2019,
+						"month": 7,
+						"day": 10
+					},
+					"instrumentCurrencyValuation": 10112500.00,
+					"bookCurrencyValuation": 10112500.00,
+					"fxRate": 1.0,
+					"accruedAmortization": 3701.716738,
+					"bookValue": 9903701.717,
+					"interestAccrued": 6.5068, 
+					"valuationInput": {
+						"id": 2,
+						"numericInputData": {
+							"Instrument.Price": 101.125,
+							"Position.Quantity": 100000 
+						},
+						"textInputData": {
+							"Instrument.Currency": "USD",
+							"Instrument.AssetType":"FIXED_INCOME",
+							"Book.Currency": "USD"
+						}
+					}
+				},
+				"mtmPnL": 0.00,
+				"mtmPnLFx": 0.00,
+				"fxPnL": 0.00,
+				"ltdMtmPnL": 0.00,
+				"ltdMtmPnLFx": 0.00,
+				"ltdFxPnL": 0.00
+			},
+			"realizedPnL": {
+				"proceeds": 0.00,
+				"fees": 0.00,
+				"commissions": 0.00,
+				"ltdProceeds": 0.00,
+				"ltdFees": 0.00,
+				"ltdCommissions": 0.00
+			}
+		}
+	]
+}

@@ -3,6 +3,7 @@ package org.galatea.pocpnl.service.valuation;
 import static org.galatea.pocpnl.domain.InputData.BOOK_CURRENCY;
 import static org.galatea.pocpnl.domain.InputData.FX_RATE;
 import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_ASSET_TYPE;
+import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_COUPON_RATE;
 import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_CURRENCY;
 import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_MATURITY_DATE;
 import static org.galatea.pocpnl.domain.InputData.INSTRUMENT_PRICE;
@@ -58,17 +59,28 @@ public class PQValuationService implements IValuationService {
     BigDecimal accruedAmortization = getAccruedAmortization(valuationInput);
     BigDecimal bookValue = getBookValue(valuationInput, accruedAmortization);
 
+    BigDecimal interestAccrued = getinterestAccrued(valuationInput);
+
     ValuationResult result = ValuationResult.builder()
         .instrumentCurrencyValuation(instrumentCurrencyValuation)
         .bookCurrencyValuation(bookCurrencyValuation)
         .accruedAmortization(accruedAmortization)
         .bookValue(bookValue)
         .fxRate(fxRate)
+        .interestAccrued(interestAccrued)
         .build();
 
     return ValuationResponse.builder().valuationInput(valuationInput)
         .valuationResult(result).build();
   }
+
+  private BigDecimal getinterestAccrued(ValuationInput valuationInput) {
+    long qty = (int) getInputData(valuationInput, POSITION_QTY);
+    double couponRate = (double) getInputData(valuationInput, INSTRUMENT_COUPON_RATE);
+    return BigDecimal.valueOf(qty * couponRate / 365);
+  }
+
+
 
   private double getFxRate(ValuationInput valuationInput) {
     String bookCurrency = (String) getInputData(valuationInput, BOOK_CURRENCY);

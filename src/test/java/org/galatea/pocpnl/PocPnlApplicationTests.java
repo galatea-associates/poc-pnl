@@ -113,6 +113,12 @@ public class PocPnlApplicationTests {
     runScenario(loadScenario("scenarios/qtyAndPriceAndFxMove.json"));
   }
 
+  @Test
+  public void accruedInterestAndAccretionTest() throws FileNotFoundException, IOException {
+    runScenario(loadScenario("scenarios/accruedInterestAndAccretion.json"));
+  }
+
+
   private void runScenario(TestScenario scenario) {
     log.info("TEST: {}", scenario.getName());
     loadBooks(scenario.getBooks());

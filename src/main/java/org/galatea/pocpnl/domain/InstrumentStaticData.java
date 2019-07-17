@@ -18,5 +18,6 @@ public class InstrumentStaticData {
   private String currency;
   private AssetType assetType;
   private LocalDate maturityDate;
+  private double couponRate;
 
 }

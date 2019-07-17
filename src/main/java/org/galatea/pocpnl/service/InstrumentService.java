@@ -30,4 +30,10 @@ public class InstrumentService {
     return instrumentStaticData.getMaturityDate();
   }
 
+  public double getInstrumentCouponRate(String instrumentId) {
+    InstrumentStaticData instrumentStaticData =
+        instrumentStaticDataRepository.getByInstrumentId(instrumentId).get();
+    return instrumentStaticData.getCouponRate();
+  }
+
 }
