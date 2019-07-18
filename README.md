@@ -25,18 +25,27 @@ The *Unrealized P&L* need to get the valuation of the Instrument and for this we
 
 Finally, the *PnL* service calculates the *Realized P&L* retrieving the trades involving the instrument and adding different values such as Commissions, Fees and Cash Proceeds. The following diagram details this process: [Realized PnL workflow](https://mermaidjs.github.io/mermaid-live-editor/#/view/eyJjb2RlIjoiZ3JhcGggVEJcbiAgICBDYWxjdWxhdGVSZWFsaXplZFBubFtDYWxjdWxhdGUgUmVhbGl6ZWQgUCZMIGZvciBpbnN0cnVtZW50XVxuICAgIEdldFRyYWRlc1tHZXQgVHJhZGVzXVxuICAgIE1vcmVUcmFkZXN7TW9yZSBUcmFkZXM_fVxuICAgQWRkUHJvY2VlZHNbQWRkIFByb2NlZWRzXVxuICAgQWRkRmVlc1tBZGQgRmVlc11cbiAgIEFkZENvbW1pc3Npb25zW0FkZCBDb21taXNzaW9uc11cbiAgICBEb25lKChEb25lKSlcblxuc3ViZ3JhcGggUG5MU2VydmljZVxuQ2FsY3VsYXRlUmVhbGl6ZWRQbmwgLS0-IEdldFRyYWRlc1xuR2V0VHJhZGVzIC0tPiBNb3JlVHJhZGVzXG5Nb3JlVHJhZGVzIC0teWVzLS0-IEFkZFByb2NlZWRzXG5BZGRQcm9jZWVkcyAtLT4gQWRkRmVlc1xuQWRkRmVlcyAtLT4gQWRkQ29tbWlzc2lvbnNcbkFkZENvbW1pc3Npb25zIC0tPiBNb3JlVHJhZGVzXG5Nb3JlVHJhZGVzIC0tbm8tLT4gRG9uZVxuZW5kIiwibWVybWFpZCI6eyJ0aGVtZSI6Im5ldXRyYWwifX0)
 
+## Important Values
+
+[P&L / Risk Blotter G-Sheet](https://docs.google.com/spreadsheets/d/1tDryUhUx5R2LuQ_O5g3vuoQr2OmXviuQv57i0sUaKCM/edit#gid=1213236310)
+
+|  Value                               |Description|Formula|
+|--------------------------------------|---|---|
+| MTM P&L                              |||
+| MTM P&L (Book Currency)              |||
+| FX P&L                               |||
+| LTD MTM P&L                          |||
+| LTD MTM P&L (Book Currency)          |||
+| LTD FX P&L                           |||
+| Unrealized P&L (Instrument Currency) |||
+| Unrealized P&L (Book Currency)       |||
+| Accrued Amortization                 |||
+| Book Value                           |||
+| Realized P&L                         |||
+
 ## Dependencies
 
 See pom.xml for entire list of dependencies.
-
-- spring-boot-starter-web
-- spring-boot-starter-thymeleaf
-- spring-boot-devtools
-- spring-boot-starter-test
-- spring-boot-starter-data-jpa
-- h2
-- gson
-- lombok
 
 ## Setting up in Eclipse
 
