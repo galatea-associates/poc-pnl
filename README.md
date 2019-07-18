@@ -46,12 +46,10 @@ Install lombok:  [https://projectlombok.org/setup/eclipse](https://projectlombok
 
 ## Future work
 See open issues
+* Swaps (cashflows)
+* Dividends/Coupons
 
 ## References
 Section with relevant links to information
 
-
-# Future Work
-* Swaps (cashflows)
-* Dividends/Coupons
 
