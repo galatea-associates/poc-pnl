@@ -19,6 +19,17 @@ Following  *[Fuse](https://github.com/GalateaRaj/fuse-starter-java#components)* 
 
 ## Dependencies
 
+See pom.xml for entire list of dependencies.
+
+- spring-boot-starter-web
+- spring-boot-starter-thymeleaf
+- spring-boot-devtools
+- spring-boot-starter-test
+- spring-boot-starter-data-jpa
+- h2
+- gson
+- lombok
+
 ## Setting up in Eclipse
 
 ### Code Style
@@ -37,14 +48,33 @@ Set code style settings, which will allow auto-formatting of code to match the G
 Install lombok:  [https://projectlombok.org/setup/eclipse](https://projectlombok.org/setup/eclipse). Note if you're doing this step last because you raced ahead and nothing compiles you'll have to do some cleans and re-compiles to get lombok involved in generating all the class files.
 
 ### Running the project
+Eclipse: r-click -> run as 'Java Application' on src/main/java/org/galatea/pocpnl/App.java
+
+After startup, UI should be available http://localhost:8080/pnl
 
 ## Initial Data Import
 
 ## Testing
 
+This application is tested using a series of scenarios defined in json files. Each test will read a single json file and parse it into a TestScenario object.
+
+A TestScenario object should have all the information required to perform the test:
+- Inputs
+  - Instruments
+  - Static Data
+  - FxRates
+  - Trades
+  - Existing Valuations
+- Expected Output
+  - Expected P&L results
+
 ### Running the tests
+Eclipse: r-click 'Run As -> JUnit Test' on src/test/java/org/galatea/pocpnl/PocPnlApplicationTests
 
 ### Adding new tests
+To add a new tests:
+1. Define a new json file witht the test scenario following the TestScenario.java structure.
+2. Create a new test in PocPnlApplicationTests following the existing test conventions.
 
 ## Future work
 See open issues
