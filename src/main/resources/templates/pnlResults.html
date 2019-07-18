@@ -140,11 +140,11 @@
 						/>
 					<td th:text="${result.unrealizedPnL.ltdFxPnL}" />
 					<td class="withTooltip"
-						th:text='${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}-${result.unrealizedPnL.currentValuation.bookCurrencyValuation}'
+						th:text='${result.unrealizedPnL.currentValuation.bookCurrencyValuation}-${result.unrealizedPnL.referenceValuation.bookCurrencyValuation}'
 						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('BOOK_CURRENCY')}
 						/>
 					<td class="withTooltip"
-						th:text='${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}-${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}'
+						th:text='${result.unrealizedPnL.currentValuation.instrumentCurrencyValuation}-${result.unrealizedPnL.referenceValuation.instrumentCurrencyValuation}'
 						data-toggle="tooltip" data-placement="top" th:title=${result.unrealizedPnL.currentValuation.valuationInput.get('INSTRUMENT_CURRENCY')}
 						/>
 					<td th:text="${result.realizedPnL.fees}" />
