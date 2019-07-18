@@ -54,6 +54,22 @@ After startup, UI should be available http://localhost:8080/pnl
 
 ## Initial Data Import
 
+Initial Data can be imported by the *@Service* DataImportService which reads text files containing a single json object per line. The DataImportService reads each file, parses each json into an object and uses the corresponfing *Repository* to persist the object.
+
+*src/main/resources/data/books.txt*
+```
+{"bookId": "EQTY1", "currency": "USD"}
+{"bookId": "EQTY2", "currency": "USD"}
+
+```
+
+```
+public void importData() {
+    importData(bookRepository, getLines("books.txt"), Book.class);
+  }
+  
+```
+
 ## Testing
 
 This application is tested using a series of scenarios defined in json files. Each test will read a single json file and parse it into a TestScenario object.
@@ -77,11 +93,20 @@ To add a new tests:
 2. Create a new test in PocPnlApplicationTests following the existing test conventions.
 
 ## Future work
-See open issues
+See open [issues](https://github.com/galatea-associates/poc-pnl/issues)
 * Swaps (cashflows)
 * Dividends/Coupons
 
 ## References
 Section with relevant links to information
 
+- Cost Basis https://www.investopedia.com/terms/c/costbasis.asp
+- Constant Yield Method https://www.investopedia.com/terms/a/accretion-of-discount.asp
+- Amortization/Accretion:
+  - https://www.investopedia.com/terms/a/accretion-of-discount.asp
+  - https://www.investopedia.com/terms/a/amortizable-bond-premium.asp
+- Clean vs. dirty price https://www.investopedia.com/terms/c/cleanprice.asp
+- Yield
+  - Yield To Maturity https://www.investopedia.com/terms/y/yieldtomaturity.asp
+  - Yield To Call https://www.fool.com/knowledge-center/how-to-calculate-yield-for-a-callable-bond.aspx
 
