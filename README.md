@@ -29,19 +29,17 @@ Finally, the *PnL* service calculates the *Realized P&L* retrieving the trades i
 
 [P&L / Risk Blotter G-Sheet](https://docs.google.com/spreadsheets/d/1tDryUhUx5R2LuQ_O5g3vuoQr2OmXviuQv57i0sUaKCM/edit#gid=1213236310)
 
-|  Value                               |Description|Formula|
-|--------------------------------------|---|---|
-| MTM P&L                              |||
-| MTM P&L (Book Currency)              |||
-| FX P&L                               |||
-| LTD MTM P&L                          |||
-| LTD MTM P&L (Book Currency)          |||
-| LTD FX P&L                           |||
-| Unrealized P&L (Instrument Currency) |||
-| Unrealized P&L (Book Currency)       |||
-| Accrued Amortization                 |||
-| Book Value                           |||
-| Realized P&L                         |||
+|  Value                               |Formula|
+|--------------------------------------|---|
+| MTM P&L                              |CurrentValuation.Valuation - ReferenceValuation.Valuation|
+| MTM P&L (Book Currency)              |mtmPnL * CurrentValuation.FxRate|
+| FX P&L                               |CurrentValuation.Valuation * (ReferenceValuation.FxRate - CurrentValuation.FxRate)|
+| LTD MTM P&L                          |ReferencePnl.ltdMtMPnL + CurrentPnl.mtmPnL|
+| LTD MTM P&L (Book Currency)          |ReferencePnl.ltdMtMPnLBook + CurrentPnl.mtmPnLBook|
+| LTD FX P&L                           |ReferencePnl.ltdFxPnl + CurrentPnl.fxPnl|
+| Unrealized P&L (Instrument Currency) |CurrentValuation.Valuation - ReferenceValuation.Valuation|
+| Unrealized P&L (Book Currency)       |CurrentValuation.ValuationBook - ReferenceValuation.ValuationBook|
+| Realized P&L                         |Fees + Commissions + Proceeds|
 
 ## Dependencies
 
