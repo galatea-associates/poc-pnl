@@ -1,5 +1,6 @@
 package org.galatea.pocpnl.entrypoint;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import org.galatea.pocpnl.domain.PnL;
@@ -8,10 +9,12 @@ import org.galatea.pocpnl.domain.Valuation;
 import org.galatea.pocpnl.repository.PnLRepository;
 import org.galatea.pocpnl.repository.PositionRepository;
 import org.galatea.pocpnl.repository.ValuationRepository;
+import org.galatea.pocpnl.service.SimulatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PnLController {
@@ -22,6 +25,8 @@ public class PnLController {
   PnLRepository pnlRepository;
   @Autowired
   ValuationRepository valuationRepository;
+  @Autowired
+  SimulatorService simulatorService;
 
   @GetMapping("/positions")
   public String getAllPositions(Model model) {
@@ -47,10 +52,17 @@ public class PnLController {
 
   @GetMapping("/pnl")
   public String getAllPnL(Model model) {
-    Iterable<PnL> results = pnlRepository.findAll();
-
-    model.addAttribute("results", results);
+    List<PnL> results = pnlRepository.findAll();
+    
+   model.addAttribute("results", results);
     return "pnlResults"; // view
   }
+  
+  @GetMapping("/next")
+  public String getNextEODPnL(Model model) {
+	simulatorService.simulateNextEOD();
+    return getAllPnL(model);
+  }
+  
 
 }

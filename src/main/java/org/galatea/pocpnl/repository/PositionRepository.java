@@ -12,7 +12,12 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
   List<Position> findByBook(String book);
 
   List<Position> findByBookAndInstrumentAndDate(String book, String instrument, LocalDate eodDate);
+  
+  List<Position> findByDate(LocalDate eodDate);
 
+  @Query("SELECT MAX(date) FROM Position")
+  LocalDate findMostRecentDate();
+  
   @Query("SELECT DISTINCT book FROM Position")
   Set<String> findDistinctBook();
 

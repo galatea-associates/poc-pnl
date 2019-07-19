@@ -22,6 +22,10 @@
 .btn-group {
 	width: 100%;
 }
+
+.btn {
+	width: 100%;
+}
 .withTooltip {
     cursor: pointer;
 }
@@ -42,7 +46,12 @@
 	</nav>
 
 	<div class="container" style="max-width: 95%; margin-top: 1%;">
-		<div id="table_id_filter" class="col col-lg-10">
+		
+		
+		<div id="simulator_id" class="col col-lg-2">		
+			<a class="btn btn-outline-secondary" th:href="@{/next}" role="button">Simulate next EOD</a>
+		</div>
+		<div id="table_id_filter" class="col col-lg-8">
 			<input id="myInput" type="search" class="form-control "
 				placeholder="Search..." aria-controls="table_id">
 		</div>
@@ -167,8 +176,7 @@
 		</table>
 	</div>
 	<script>
-		$(document).ready(
-				function() {
+	
 					var table = $('#table_id').DataTable({
 						"scrollY" : "100%",
 						"scrollX" : "100%",
@@ -195,10 +203,12 @@
 
 					document.getElementById('top').prepend(
 							document.getElementById('table_id_filter'))
+					document.getElementById('top').prepend(
+							document.getElementById('simulator_id'))
 							
-				}
+				
 
-				);
+	
 	
 	</script>
 </body>
